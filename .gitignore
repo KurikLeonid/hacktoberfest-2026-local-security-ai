@@ -1,0 +1,9 @@
+__pycache__/
+*.pyc
+.venv/
+node_modules/
+frontend/dist/
+data/*.db
+data/*.db-*
+data/hf_cache/
+.DS_Store
