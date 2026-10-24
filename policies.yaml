@@ -14,7 +14,7 @@ never_allowed:
 
 thresholds:
   review: 0.5   # score >= review -> REVIEW
-  block: 0.85   # score >= block  -> BLOCK
+  block: 0.9    # score >= block  -> BLOCK (matches verifier scale: 0.9+ = unambiguous harm)
 
 review_timeout_s: 60
 model_timeout_s: 15

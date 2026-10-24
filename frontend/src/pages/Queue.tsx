@@ -20,7 +20,38 @@ function Countdown({ ev, timeout }: { ev: DlpEvent; timeout: number }) {
   )
 }
 
-export function EventCard({ ev, timeout, onDecided }: { ev: DlpEvent; timeout: number; onDecided?: (n: number) => void }) {
+export type Thresholds = { review: number; block: number }
+
+/** Model confidence vs the policy thresholds, so it is clear why the request got its tier. */
+export function ScoreBar({ score, th }: { score: number; th: Thresholds }) {
+  const pct = (v: number) => `${Math.round(v * 100)}%`
+  return (
+    <div className="mb-3 rounded bg-slate-50 p-2 text-xs">
+      <div className="relative mb-1 h-2.5 overflow-hidden rounded">
+        <div className="absolute inset-y-0 left-0 bg-emerald-300" style={{ width: pct(th.review) }} />
+        <div className="absolute inset-y-0 bg-amber-300" style={{ left: pct(th.review), width: pct(th.block - th.review) }} />
+        <div className="absolute inset-y-0 right-0 bg-rose-300" style={{ left: pct(th.block) }} />
+        <div className="absolute inset-y-0 w-1 -translate-x-1/2 bg-slate-900" style={{ left: pct(Math.min(score, 0.995)) }} />
+      </div>
+      <span className="font-semibold">Уверенность модели в нарушении: {pct(score)}</span>
+      <span className="text-slate-500">
+        {' '}· пороги: REVIEW ≥ {pct(th.review)}, BLOCK ≥ {pct(th.block)}
+      </span>
+    </div>
+  )
+}
+
+export function EventCard({
+  ev,
+  timeout,
+  th,
+  onDecided,
+}: {
+  ev: DlpEvent
+  timeout: number
+  th: Thresholds
+  onDecided?: (n: number) => void
+}) {
   const [busy, setBusy] = useState(false)
   const [err, setErr] = useState('')
   const decide = async (d: 'approve' | 'reject') => {
@@ -43,13 +74,17 @@ export function EventCard({ ev, timeout, onDecided }: { ev: DlpEvent; timeout: n
         <TierBadge tier={ev.tier} />
         <span className="font-medium">{ev.host}</span>
         <span className="text-xs text-slate-500">
-          {ev.adapter} · score {ev.score.toFixed(2)} · {fmtTime(ev.created_at)}
+          {ev.adapter} · {fmtTime(ev.created_at)}
           {ev.latency_ms != null && ` · ${(ev.latency_ms / 1000).toFixed(1)}s`}
         </span>
         <StatusText status={ev.status} />
         {pending && <Countdown ev={ev} timeout={timeout} />}
       </div>
-      {ev.error && <p className="mb-2 rounded bg-rose-50 p-2 text-sm text-rose-700">Fail-closed: {ev.error}</p>}
+      {ev.error ? (
+        <p className="mb-2 rounded bg-rose-50 p-2 text-sm text-rose-700">Fail-closed: {ev.error}</p>
+      ) : (
+        <ScoreBar score={ev.score} th={th} />
+      )}
       <Highlighted text={ev.text} findings={ev.findings} />
       <div className="mt-3">
         <FindingsList findings={ev.findings} />
@@ -83,7 +118,7 @@ export function EventCard({ ev, timeout, onDecided }: { ev: DlpEvent; timeout: n
   )
 }
 
-export default function Queue({ events, timeout }: { events: DlpEvent[]; timeout: number }) {
+export default function Queue({ events, timeout, th }: { events: DlpEvent[]; timeout: number; th: Thresholds }) {
   const [toast, setToast] = useState('')
   const open = events.filter((e) => ['pending', 'blocked', 'expired'].includes(e.status))
   const pending = open.filter((e) => e.status === 'pending')
@@ -98,11 +133,11 @@ export default function Queue({ events, timeout }: { events: DlpEvent[]; timeout
       <h2 className="text-lg font-semibold">Ждут решения ({pending.length})</h2>
       {pending.length === 0 && <p className="text-sm text-slate-500">Нет запросов на проверке.</p>}
       {pending.map((e) => (
-        <EventCard key={e.id} ev={e} timeout={timeout} onDecided={onDecided} />
+        <EventCard key={e.id} ev={e} timeout={timeout} th={th} onDecided={onDecided} />
       ))}
       <h2 className="pt-4 text-lg font-semibold">Заблокировано, не разобрано ({rest.length})</h2>
       {rest.map((e) => (
-        <EventCard key={e.id} ev={e} timeout={timeout} onDecided={onDecided} />
+        <EventCard key={e.id} ev={e} timeout={timeout} th={th} onDecided={onDecided} />
       ))}
     </div>
   )

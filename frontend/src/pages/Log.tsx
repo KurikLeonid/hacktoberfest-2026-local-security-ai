@@ -1,9 +1,9 @@
 import { Fragment, useState } from 'react'
 import type { DlpEvent } from '../api'
 import { StatusText, TierBadge, fmtTime } from '../ui'
-import { EventCard } from './Queue'
+import { EventCard, type Thresholds } from './Queue'
 
-export default function Log({ events, timeout }: { events: DlpEvent[]; timeout: number }) {
+export default function Log({ events, timeout, th }: { events: DlpEvent[]; timeout: number; th: Thresholds }) {
   const [open, setOpen] = useState<string | null>(null)
   return (
     <div className="overflow-hidden rounded-lg border border-slate-200 bg-white">
@@ -33,7 +33,7 @@ export default function Log({ events, timeout }: { events: DlpEvent[]; timeout: 
               </tr>
               {open === e.id && (
                 <tr>
-                  <td colSpan={7} className="bg-slate-50 p-3"><EventCard ev={e} timeout={timeout} /></td>
+                  <td colSpan={7} className="bg-slate-50 p-3"><EventCard ev={e} timeout={timeout} th={th} /></td>
                 </tr>
               )}
             </Fragment>

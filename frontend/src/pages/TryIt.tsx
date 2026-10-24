@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { api, type Finding, type Tier } from '../api'
 import { Button, Card, FindingsList, Highlighted, TierBadge } from '../ui'
+import { ScoreBar, type Thresholds } from './Queue'
 
 const SAMPLES = [
   'How do I reverse a linked list in Python?',
@@ -9,7 +10,7 @@ const SAMPLES = [
   'Review this function from our billing service:\ndef apply_discount(invoice, tier):\n    if tier == "gold":\n        return invoice.total * 0.82\n    return invoice.total',
 ]
 
-export default function TryIt({ domains }: { domains: string[] }) {
+export default function TryIt({ domains, th }: { domains: string[]; th: Thresholds }) {
   const [text, setText] = useState(SAMPLES[1])
   const [host, setHost] = useState(domains[0] ?? 'chatgpt.com')
   const [busy, setBusy] = useState(false)
@@ -45,10 +46,9 @@ export default function TryIt({ domains }: { domains: string[] }) {
         <Card>
           <div className="mb-2 flex items-center gap-2">
             <TierBadge tier={res.tier} />
-            <span className="text-sm">score {res.score.toFixed(2)}</span>
             {res.latency_ms != null && <span className="text-xs text-slate-500">{(res.latency_ms / 1000).toFixed(1)}s</span>}
           </div>
-          {res.error && <p className="mb-2 text-sm text-rose-600">Fail-closed: {res.error}</p>}
+          {res.error ? <p className="mb-2 text-sm text-rose-600">Fail-closed: {res.error}</p> : <ScoreBar score={res.score} th={th} />}
           <Highlighted text={res.text} findings={res.findings} />
           <div className="mt-3"><FindingsList findings={res.findings} /></div>
         </Card>

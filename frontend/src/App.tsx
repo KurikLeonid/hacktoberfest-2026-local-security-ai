@@ -60,6 +60,7 @@ export default function App() {
 
   const pending = events.filter((e) => e.status === 'pending').length
   const timeout = policy?.review_timeout_s ?? 60
+  const th = policy?.thresholds ?? { review: 0.5, block: 0.9 }
 
   return (
     <div className="min-h-screen bg-slate-100 text-slate-900">
@@ -92,9 +93,9 @@ export default function App() {
         </div>
       </header>
       <main className="mx-auto max-w-6xl px-4 py-6">
-        {tab === 'queue' && <Queue events={events} timeout={timeout} />}
-        {tab === 'log' && <Log events={events} timeout={timeout} />}
-        {tab === 'try' && <TryIt domains={Object.keys(policy?.domains ?? {})} />}
+        {tab === 'queue' && <Queue events={events} timeout={timeout} th={th} />}
+        {tab === 'log' && <Log events={events} timeout={timeout} th={th} />}
+        {tab === 'try' && <TryIt domains={Object.keys(policy?.domains ?? {})} th={th} />}
         {tab === 'policies' && <Policies onSaved={loadPolicy} />}
         {tab === 'dataset' && <Dataset categories={policy?.categories ?? []} />}
       </main>
