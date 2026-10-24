@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" width="400" height="300">
+  <title>Local DLP Guard</title>
+  <rect width="400" height="300" rx="28" fill="#eef2ff"/>
+  <g fill="#1e1b4b">
+    <!-- security guard: cap, head, body, arms reaching forward -->
+    <path d="M88 62 q32-22 64 0 l14 6 -8 8 h-70z"/>
+    <rect x="96" y="54" width="48" height="8" rx="3" fill="#4f46e5"/>
+    <circle cx="120" cy="92" r="22"/>
+    <path d="M86 122 q34-14 70 0 l10 110 h-90z"/>
+    <path d="M150 132 l64 4 6 14 -66 6z"/>
+    <path d="M146 150 l70 6 4 12 -72 2z"/>
+    <rect x="94" y="232" width="22" height="46" rx="6"/>
+    <rect x="128" y="232" width="22" height="46" rx="6"/>
+    <!-- employee: smaller, lifted, badge on lanyard -->
+    <circle cx="246" cy="118" r="20"/>
+    <path d="M224 108 l-6-10 8 4 -2-12 8 9 2-11 6 10 6-9 1 11 9-7 -4 11z"/>
+    <path d="M222 146 q26-10 50 0 l8 84 h-66z"/>
+    <path d="M272 156 l38-26 8 8 -36 32z"/>
+    <path d="M222 160 l-22 30 8 6 22-24z"/>
+    <rect x="224" y="228" width="16" height="40" rx="5" transform="rotate(-12 232 228)"/>
+    <rect x="254" y="228" width="16" height="40" rx="5" transform="rotate(14 262 228)"/>
+  </g>
+  <!-- badge -->
+  <path d="M238 146 l9 20 9-20" fill="none" stroke="#4f46e5" stroke-width="3"/>
+  <rect x="237" y="166" width="20" height="26" rx="3" fill="#fff" stroke="#4f46e5" stroke-width="3"/>
+  <rect x="241" y="172" width="12" height="3" fill="#4f46e5"/>
+  <!-- shaking lines and "!!" -->
+  <g stroke="#ef4444" stroke-width="4" stroke-linecap="round" fill="none">
+    <path d="M282 92 q8-8 16 0"/><path d="M290 80 q10-10 20 0"/>
+    <path d="M206 92 q-8-8-16 0"/><path d="M198 80 q-10-10-20 0"/>
+  </g>
+  <text x="300" y="70" font-family="Arial Black,Arial" font-weight="900" font-size="34" fill="#ef4444">!!</text>
+  <text x="200" y="292" text-anchor="middle" font-family="Arial,Helvetica" font-weight="700" font-size="20" fill="#1e1b4b">LOCAL DLP GUARD</text>
+</svg>

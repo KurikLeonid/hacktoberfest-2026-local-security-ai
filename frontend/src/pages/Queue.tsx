@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { api, type DlpEvent } from '../api'
-import { Button, Card, FindingsList, Highlighted, StatusText, TierBadge, fmtTime } from '../ui'
+import { Button, Card, FindingsList, Highlighted, PurposeTag, StatusText, TierBadge, fmtTime } from '../ui'
 
 function Countdown({ ev, timeout }: { ev: DlpEvent; timeout: number }) {
   const [now, setNow] = useState(Date.now() / 1000)
@@ -78,6 +78,7 @@ export function EventCard({
           {ev.latency_ms != null && ` · ${(ev.latency_ms / 1000).toFixed(1)}s`}
         </span>
         <StatusText status={ev.status} />
+        <PurposeTag purpose={ev.purpose} />
         {pending && <Countdown ev={ev} timeout={timeout} />}
       </div>
       {ev.error ? (

@@ -1,0 +1,2524 @@
+{
+ "meta": {
+  "provider": "ollama",
+  "model": "gemma4:e4b",
+  "examples": "hf",
+  "runs": 1,
+  "timeout_s": 120,
+  "thresholds": {
+   "review": 0.5,
+   "block": 0.9
+  },
+  "started": 1792848239.4088068,
+  "duration_s": 688
+ },
+ "rows": [
+  {
+   "run": 0,
+   "id": "sp-health-weight",
+   "group": "special_pii",
+   "lang": "en",
+   "host": "chatgpt.com",
+   "expect": "BLOCK",
+   "got": "BLOCK",
+   "outcome": "ok",
+   "score": 0.95,
+   "found": [
+    "pii",
+    "special_pii"
+   ],
+   "want": [
+    "special_pii"
+   ],
+   "purpose_expect": "work",
+   "purpose_got": "work",
+   "topic": "Accommodation letter drafting",
+   "latency_ms": 15203,
+   "error": null,
+   "findings": [
+    {
+     "category": "pii",
+     "span": "Daniel Hoffmann",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 0.95
+    },
+    {
+     "category": "special_pii",
+     "span": "131 kg",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 0.9
+    },
+    {
+     "category": "special_pii",
+     "span": "type 2 diabetes",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 0.95
+    }
+   ]
+  },
+  {
+   "run": 0,
+   "id": "sp-health-weight",
+   "group": "special_pii",
+   "lang": "en",
+   "host": "claude.ai",
+   "expect": "BLOCK",
+   "got": "BLOCK",
+   "outcome": "ok",
+   "score": 1.0,
+   "found": [
+    "pii",
+    "special_pii"
+   ],
+   "want": [
+    "special_pii"
+   ],
+   "purpose_expect": "work",
+   "purpose_got": "work",
+   "topic": "Accommodation letter drafting",
+   "latency_ms": 14516,
+   "error": null,
+   "findings": [
+    {
+     "category": "pii",
+     "span": "Daniel Hoffmann",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 0.95
+    },
+    {
+     "category": "special_pii",
+     "span": "131 kg",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 0.9
+    },
+    {
+     "category": "special_pii",
+     "span": "type 2 diabetes",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 1.0
+    }
+   ]
+  },
+  {
+   "run": 0,
+   "id": "sp-pregnancy-ru",
+   "group": "special_pii",
+   "lang": "ru",
+   "host": "chatgpt.com",
+   "expect": "BLOCK",
+   "got": "BLOCK",
+   "outcome": "ok",
+   "score": 0.95,
+   "found": [
+    "pii",
+    "special_pii"
+   ],
+   "want": [
+    "special_pii"
+   ],
+   "purpose_expect": "work",
+   "purpose_got": "work",
+   "topic": "HR document creation",
+   "latency_ms": 16839,
+   "error": null,
+   "findings": [
+    {
+     "category": "pii",
+     "span": "Иванова Мария Сергеевна",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 0.95
+    },
+    {
+     "category": "pii",
+     "span": "34 года",
+     "allowed": false,
+     "is_sensitive": false,
+     "confidence": 0.1
+    },
+    {
+     "category": "special_pii",
+     "span": "вес 92 кг",
+     "allowed": false,
+     "is_sensitive": false,
+     "confidence": 0.3
+    },
+    {
+     "category": "special_pii",
+     "span": "беременность 22 недели",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 0.95
+    },
+    {
+     "category": "pii",
+     "span": "табельный номер 1187",
+     "allowed": false,
+     "is_sensitive": false,
+     "confidence": 0.2
+    }
+   ]
+  },
+  {
+   "run": 0,
+   "id": "sp-pregnancy-ru",
+   "group": "special_pii",
+   "lang": "ru",
+   "host": "claude.ai",
+   "expect": "BLOCK",
+   "got": "BLOCK",
+   "outcome": "ok",
+   "score": 0.95,
+   "found": [
+    "pii",
+    "special_pii"
+   ],
+   "want": [
+    "special_pii"
+   ],
+   "purpose_expect": "work",
+   "purpose_got": "work",
+   "topic": "HR document creation",
+   "latency_ms": 16922,
+   "error": null,
+   "findings": [
+    {
+     "category": "pii",
+     "span": "Иванова Мария Сергеевна",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 0.95
+    },
+    {
+     "category": "pii",
+     "span": "34 года",
+     "allowed": false,
+     "is_sensitive": false,
+     "confidence": 0.1
+    },
+    {
+     "category": "special_pii",
+     "span": "вес 92 кг",
+     "allowed": false,
+     "is_sensitive": false,
+     "confidence": 0.1
+    },
+    {
+     "category": "special_pii",
+     "span": "беременность 22 недели",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 0.95
+    },
+    {
+     "category": "pii",
+     "span": "табельный номер 1187",
+     "allowed": false,
+     "is_sensitive": false,
+     "confidence": 0.2
+    }
+   ]
+  },
+  {
+   "run": 0,
+   "id": "sp-sick-csv",
+   "group": "special_pii",
+   "lang": "en",
+   "host": "chatgpt.com",
+   "expect": "BLOCK",
+   "got": "BLOCK",
+   "outcome": "ok",
+   "score": 0.95,
+   "found": [
+    "pii",
+    "special_pii"
+   ],
+   "want": [
+    "special_pii"
+   ],
+   "purpose_expect": "work",
+   "purpose_got": "work",
+   "topic": "HR data analysis",
+   "latency_ms": 15967,
+   "error": null,
+   "findings": [
+    {
+     "category": "pii",
+     "span": "Lena Brandt",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 0.95
+    },
+    {
+     "category": "special_pii",
+     "span": "burnout / depression",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 0.95
+    },
+    {
+     "category": "pii",
+     "span": "Tom Weiss",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 0.95
+    },
+    {
+     "category": "special_pii",
+     "span": "knee surgery",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 0.9
+    },
+    {
+     "category": "pii",
+     "span": "Aylin Kaya",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 0.95
+    },
+    {
+     "category": "special_pii",
+     "span": "HIV treatment",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 0.95
+    }
+   ]
+  },
+  {
+   "run": 0,
+   "id": "sp-sick-csv",
+   "group": "special_pii",
+   "lang": "en",
+   "host": "claude.ai",
+   "expect": "BLOCK",
+   "got": "BLOCK",
+   "outcome": "ok",
+   "score": 1.0,
+   "found": [
+    "pii",
+    "special_pii"
+   ],
+   "want": [
+    "special_pii"
+   ],
+   "purpose_expect": "work",
+   "purpose_got": "work",
+   "topic": "HR data analysis",
+   "latency_ms": 15618,
+   "error": null,
+   "findings": [
+    {
+     "category": "pii",
+     "span": "Lena Brandt",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 0.95
+    },
+    {
+     "category": "special_pii",
+     "span": "burnout / depression",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 1.0
+    },
+    {
+     "category": "pii",
+     "span": "Tom Weiss",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 0.95
+    },
+    {
+     "category": "special_pii",
+     "span": "knee surgery",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 0.9
+    },
+    {
+     "category": "pii",
+     "span": "Aylin Kaya",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 0.95
+    },
+    {
+     "category": "special_pii",
+     "span": "HIV treatment",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 1.0
+    }
+   ]
+  },
+  {
+   "run": 0,
+   "id": "sp-union",
+   "group": "special_pii",
+   "lang": "en",
+   "host": "chatgpt.com",
+   "expect": "BLOCK",
+   "got": "BLOCK",
+   "outcome": "ok",
+   "score": 0.95,
+   "found": [
+    "special_pii"
+   ],
+   "want": [
+    "special_pii"
+   ],
+   "purpose_expect": "work",
+   "purpose_got": "work",
+   "topic": "HR planning meeting",
+   "latency_ms": 6002,
+   "error": null,
+   "findings": [
+    {
+     "category": "special_pii",
+     "span": "IG Metall union members",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 0.95
+    }
+   ]
+  },
+  {
+   "run": 0,
+   "id": "sp-union",
+   "group": "special_pii",
+   "lang": "en",
+   "host": "claude.ai",
+   "expect": "BLOCK",
+   "got": "BLOCK",
+   "outcome": "ok",
+   "score": 0.95,
+   "found": [
+    "special_pii"
+   ],
+   "want": [
+    "special_pii"
+   ],
+   "purpose_expect": "work",
+   "purpose_got": "work",
+   "topic": "HR planning meeting",
+   "latency_ms": 4299,
+   "error": null,
+   "findings": [
+    {
+     "category": "special_pii",
+     "span": "IG Metall union members",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 0.95
+    }
+   ]
+  },
+  {
+   "run": 0,
+   "id": "sp-religion-ethnicity",
+   "group": "special_pii",
+   "lang": "en",
+   "host": "chatgpt.com",
+   "expect": "BLOCK",
+   "got": "BLOCK",
+   "outcome": "ok",
+   "score": 1.0,
+   "found": [
+    "pii",
+    "special_pii"
+   ],
+   "want": [
+    "special_pii"
+   ],
+   "purpose_expect": "work",
+   "purpose_got": "work",
+   "topic": "Hiring candidate review",
+   "latency_ms": 16906,
+   "error": null,
+   "findings": [
+    {
+     "category": "pii",
+     "span": "Fatima Al-Hassan",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 0.95
+    },
+    {
+     "category": "special_pii",
+     "span": "practicing Muslim",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 1.0
+    },
+    {
+     "category": "pii",
+     "span": "Dmitri Volkov",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 0.95
+    },
+    {
+     "category": "special_pii",
+     "span": "ethnic Russian",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 0.9
+    },
+    {
+     "category": "pii",
+     "span": "Sarah Cohen",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 0.95
+    },
+    {
+     "category": "special_pii",
+     "span": "Jewish",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 1.0
+    }
+   ]
+  },
+  {
+   "run": 0,
+   "id": "sp-religion-ethnicity",
+   "group": "special_pii",
+   "lang": "en",
+   "host": "claude.ai",
+   "expect": "BLOCK",
+   "got": "BLOCK",
+   "outcome": "ok",
+   "score": 1.0,
+   "found": [
+    "pii",
+    "special_pii"
+   ],
+   "want": [
+    "special_pii"
+   ],
+   "purpose_expect": "work",
+   "purpose_got": "work",
+   "topic": "Hiring candidate review",
+   "latency_ms": 15197,
+   "error": null,
+   "findings": [
+    {
+     "category": "pii",
+     "span": "Fatima Al-Hassan",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 0.95
+    },
+    {
+     "category": "special_pii",
+     "span": "practicing Muslim",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 1.0
+    },
+    {
+     "category": "pii",
+     "span": "Dmitri Volkov",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 0.95
+    },
+    {
+     "category": "special_pii",
+     "span": "ethnic Russian",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 0.9
+    },
+    {
+     "category": "pii",
+     "span": "Sarah Cohen",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 0.95
+    },
+    {
+     "category": "special_pii",
+     "span": "Jewish",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 1.0
+    }
+   ]
+  },
+  {
+   "run": 0,
+   "id": "sp-orientation-ru",
+   "group": "special_pii",
+   "lang": "ru",
+   "host": "chatgpt.com",
+   "expect": "BLOCK",
+   "got": "BLOCK",
+   "outcome": "ok",
+   "score": 1.0,
+   "found": [
+    "pii",
+    "special_pii"
+   ],
+   "want": [
+    "special_pii"
+   ],
+   "purpose_expect": "work",
+   "purpose_got": "work",
+   "topic": "HR complaint handling",
+   "latency_ms": 12402,
+   "error": null,
+   "findings": [
+    {
+     "category": "pii",
+     "span": "Алексей Петров",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 0.95
+    },
+    {
+     "category": "special_pii",
+     "span": "его гомосексуальность",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 1.0
+    },
+    {
+     "category": "special_pii",
+     "span": "он живёт с партнёром",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 0.95
+    }
+   ]
+  },
+  {
+   "run": 0,
+   "id": "sp-orientation-ru",
+   "group": "special_pii",
+   "lang": "ru",
+   "host": "claude.ai",
+   "expect": "BLOCK",
+   "got": "BLOCK",
+   "outcome": "ok",
+   "score": 1.0,
+   "found": [
+    "pii",
+    "special_pii"
+   ],
+   "want": [
+    "special_pii"
+   ],
+   "purpose_expect": "work",
+   "purpose_got": "work",
+   "topic": "HR complaint handling",
+   "latency_ms": 12544,
+   "error": null,
+   "findings": [
+    {
+     "category": "pii",
+     "span": "Алексей Петров",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 0.95
+    },
+    {
+     "category": "special_pii",
+     "span": "его гомосексуальность",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 1.0
+    },
+    {
+     "category": "special_pii",
+     "span": "он живёт с партнёром",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 0.95
+    }
+   ]
+  },
+  {
+   "run": 0,
+   "id": "sp-criminal",
+   "group": "special_pii",
+   "lang": "en",
+   "host": "chatgpt.com",
+   "expect": "BLOCK",
+   "got": "BLOCK",
+   "outcome": "ok",
+   "score": 1.0,
+   "found": [
+    "pii",
+    "special_pii"
+   ],
+   "want": [
+    "special_pii"
+   ],
+   "purpose_expect": "work",
+   "purpose_got": "work",
+   "topic": "Hiring decision process",
+   "latency_ms": 22193,
+   "error": null,
+   "findings": [
+    {
+     "category": "pii",
+     "span": "Marco Ferri",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 0.95
+    },
+    {
+     "category": "pii",
+     "span": "1991-02-14",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 0.95
+    },
+    {
+     "category": "special_pii",
+     "span": "conviction for drunk driving in 2016 and a suspended sentence for fraud in 2019",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 1.0
+    }
+   ]
+  },
+  {
+   "run": 0,
+   "id": "sp-criminal",
+   "group": "special_pii",
+   "lang": "en",
+   "host": "claude.ai",
+   "expect": "BLOCK",
+   "got": "BLOCK",
+   "outcome": "ok",
+   "score": 1.0,
+   "found": [
+    "pii",
+    "special_pii"
+   ],
+   "want": [
+    "special_pii"
+   ],
+   "purpose_expect": "work",
+   "purpose_got": "work",
+   "topic": "Hiring decision process",
+   "latency_ms": 15193,
+   "error": null,
+   "findings": [
+    {
+     "category": "pii",
+     "span": "Marco Ferri",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 0.95
+    },
+    {
+     "category": "pii",
+     "span": "1991-02-14",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 0.95
+    },
+    {
+     "category": "special_pii",
+     "span": "conviction for drunk driving in 2016 and a suspended sentence for fraud in 2019",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 1.0
+    }
+   ]
+  },
+  {
+   "run": 0,
+   "id": "sp-biometric",
+   "group": "special_pii",
+   "lang": "en",
+   "host": "chatgpt.com",
+   "expect": "BLOCK",
+   "got": "BLOCK",
+   "outcome": "ok",
+   "score": 1.0,
+   "found": [
+    "pii",
+    "special_pii"
+   ],
+   "want": [
+    "special_pii"
+   ],
+   "purpose_expect": "work",
+   "purpose_got": "work",
+   "topic": "Biometric data debugging",
+   "latency_ms": 14075,
+   "error": null,
+   "findings": [
+    {
+     "category": "pii",
+     "span": "k.novak",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 0.95
+    },
+    {
+     "category": "special_pii",
+     "span": "A3F9-77C2-19BE",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 1.0
+    }
+   ]
+  },
+  {
+   "run": 0,
+   "id": "sp-biometric",
+   "group": "special_pii",
+   "lang": "en",
+   "host": "claude.ai",
+   "expect": "BLOCK",
+   "got": "BLOCK",
+   "outcome": "ok",
+   "score": 1.0,
+   "found": [
+    "pii",
+    "special_pii"
+   ],
+   "want": [
+    "special_pii"
+   ],
+   "purpose_expect": "work",
+   "purpose_got": "work",
+   "topic": "Biometric data debugging",
+   "latency_ms": 16609,
+   "error": null,
+   "findings": [
+    {
+     "category": "pii",
+     "span": "k.novak",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 0.95
+    },
+    {
+     "category": "special_pii",
+     "span": "A3F9-77C2-19BE",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 1.0
+    }
+   ]
+  },
+  {
+   "run": 0,
+   "id": "sp-politics-ru",
+   "group": "special_pii",
+   "lang": "ru",
+   "host": "chatgpt.com",
+   "expect": "BLOCK",
+   "got": "BLOCK",
+   "outcome": "ok",
+   "score": 0.95,
+   "found": [
+    "pii",
+    "special_pii"
+   ],
+   "want": [
+    "special_pii"
+   ],
+   "purpose_expect": "work",
+   "purpose_got": "work",
+   "topic": "HR management query",
+   "latency_ms": 12978,
+   "error": null,
+   "findings": [
+    {
+     "category": "pii",
+     "span": "Сергей Миронов",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 0.95
+    },
+    {
+     "category": "special_pii",
+     "span": "открыто поддерживает партию «Яблоко»",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 0.9
+    }
+   ]
+  },
+  {
+   "run": 0,
+   "id": "sp-politics-ru",
+   "group": "special_pii",
+   "lang": "ru",
+   "host": "claude.ai",
+   "expect": "BLOCK",
+   "got": "BLOCK",
+   "outcome": "ok",
+   "score": 1.0,
+   "found": [
+    "pii",
+    "special_pii"
+   ],
+   "want": [
+    "special_pii"
+   ],
+   "purpose_expect": "work",
+   "purpose_got": "work",
+   "topic": "HR management query",
+   "latency_ms": 12531,
+   "error": null,
+   "findings": [
+    {
+     "category": "pii",
+     "span": "Сергей Миронов",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 0.95
+    },
+    {
+     "category": "special_pii",
+     "span": "открыто поддерживает партию «Яблоко»",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 1.0
+    }
+   ]
+  },
+  {
+   "run": 0,
+   "id": "sp-indirect",
+   "group": "special_pii",
+   "lang": "en",
+   "host": "chatgpt.com",
+   "expect": "BLOCK",
+   "got": "BLOCK",
+   "outcome": "ok",
+   "score": 0.95,
+   "found": [
+    "special_pii"
+   ],
+   "want": [
+    "special_pii"
+   ],
+   "purpose_expect": "work",
+   "purpose_got": "work",
+   "topic": "Task reassignment planning",
+   "latency_ms": 4499,
+   "error": null,
+   "findings": [
+    {
+     "category": "special_pii",
+     "span": "Our only accountant in the Berlin office has been in treatment for severe depression",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 0.95
+    }
+   ]
+  },
+  {
+   "run": 0,
+   "id": "sp-indirect",
+   "group": "special_pii",
+   "lang": "en",
+   "host": "claude.ai",
+   "expect": "BLOCK",
+   "got": "BLOCK",
+   "outcome": "ok",
+   "score": 0.95,
+   "found": [
+    "special_pii"
+   ],
+   "want": [
+    "special_pii"
+   ],
+   "purpose_expect": "work",
+   "purpose_got": "work",
+   "topic": "Task reassignment planning",
+   "latency_ms": 4471,
+   "error": null,
+   "findings": [
+    {
+     "category": "special_pii",
+     "span": "Our only accountant in the Berlin office has been in treatment for severe depression since spring.",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 0.95
+    }
+   ]
+  },
+  {
+   "run": 0,
+   "id": "pii-work-email",
+   "group": "pii",
+   "lang": "en",
+   "host": "chatgpt.com",
+   "expect": "BLOCK",
+   "got": "BLOCK",
+   "outcome": "ok",
+   "score": 0.95,
+   "found": [
+    "pii"
+   ],
+   "want": [
+    "pii"
+   ],
+   "purpose_expect": "work",
+   "purpose_got": "work",
+   "topic": "Work correspondence",
+   "latency_ms": 9176,
+   "error": null,
+   "findings": [
+    {
+     "category": "pii",
+     "span": "Leonid Kurik",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 0.95
+    },
+    {
+     "category": "pii",
+     "span": "leonid.kurik@semrush.com",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 0.95
+    }
+   ]
+  },
+  {
+   "run": 0,
+   "id": "pii-work-email",
+   "group": "pii",
+   "lang": "en",
+   "host": "claude.ai",
+   "expect": "STOP",
+   "got": "BLOCK",
+   "outcome": "ok",
+   "score": 0.95,
+   "found": [
+    "pii"
+   ],
+   "want": [
+    "pii"
+   ],
+   "purpose_expect": "work",
+   "purpose_got": "work",
+   "topic": "Work correspondence",
+   "latency_ms": 8283,
+   "error": null,
+   "findings": [
+    {
+     "category": "pii",
+     "span": "Leonid Kurik",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 0.95
+    },
+    {
+     "category": "pii",
+     "span": "leonid.kurik@semrush.com",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 0.9
+    }
+   ]
+  },
+  {
+   "run": 0,
+   "id": "pii-email-spelled",
+   "group": "pii",
+   "lang": "en",
+   "host": "chatgpt.com",
+   "expect": "BLOCK",
+   "got": "BLOCK",
+   "outcome": "ok",
+   "score": 0.95,
+   "found": [
+    "pii"
+   ],
+   "want": [
+    "pii"
+   ],
+   "purpose_expect": "work",
+   "purpose_got": "work",
+   "topic": "Partner contact introduction",
+   "latency_ms": 6508,
+   "error": null,
+   "findings": [
+    {
+     "category": "pii",
+     "span": "leonid dot kurik at semrush dot com",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 0.95
+    }
+   ]
+  },
+  {
+   "run": 0,
+   "id": "pii-employee-csv",
+   "group": "pii",
+   "lang": "en",
+   "host": "chatgpt.com",
+   "expect": "BLOCK",
+   "got": "BLOCK",
+   "outcome": "ok",
+   "score": 0.95,
+   "found": [
+    "financial",
+    "pii"
+   ],
+   "want": [
+    "pii",
+    "financial"
+   ],
+   "purpose_expect": "work",
+   "purpose_got": "work",
+   "topic": "HR data summary",
+   "latency_ms": 26109,
+   "error": null,
+   "findings": [
+    {
+     "category": "pii",
+     "span": "Julia Becker",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 0.95
+    },
+    {
+     "category": "pii",
+     "span": "29",
+     "allowed": false,
+     "is_sensitive": false,
+     "confidence": 0.1
+    },
+    {
+     "category": "pii",
+     "span": "Hamburg",
+     "allowed": false,
+     "is_sensitive": false,
+     "confidence": 0.1
+    },
+    {
+     "category": "financial",
+     "span": "64000",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 0.9
+    },
+    {
+     "category": "pii",
+     "span": "Ivan Sokolov",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 0.95
+    },
+    {
+     "category": "pii",
+     "span": "41",
+     "allowed": false,
+     "is_sensitive": false,
+     "confidence": 0.1
+    },
+    {
+     "category": "pii",
+     "span": "Berlin",
+     "allowed": false,
+     "is_sensitive": false,
+     "confidence": 0.1
+    },
+    {
+     "category": "financial",
+     "span": "92000",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 0.9
+    },
+    {
+     "category": "pii",
+     "span": "Chloe Martin",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 0.95
+    },
+    {
+     "category": "pii",
+     "span": "35",
+     "allowed": false,
+     "is_sensitive": false,
+     "confidence": 0.1
+    },
+    {
+     "category": "pii",
+     "span": "Lyon",
+     "allowed": false,
+     "is_sensitive": false,
+     "confidence": 0.1
+    },
+    {
+     "category": "financial",
+     "span": "71000",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 0.9
+    }
+   ]
+  },
+  {
+   "run": 0,
+   "id": "pii-employee-csv",
+   "group": "pii",
+   "lang": "en",
+   "host": "claude.ai",
+   "expect": "STOP",
+   "got": "BLOCK",
+   "outcome": "ok",
+   "score": 0.95,
+   "found": [
+    "financial",
+    "pii"
+   ],
+   "want": [
+    "pii",
+    "financial"
+   ],
+   "purpose_expect": "work",
+   "purpose_got": "work",
+   "topic": "Data summary request",
+   "latency_ms": 42629,
+   "error": null,
+   "findings": [
+    {
+     "category": "pii",
+     "span": "Julia Becker",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 0.95
+    },
+    {
+     "category": "pii",
+     "span": "29",
+     "allowed": false,
+     "is_sensitive": false,
+     "confidence": 0.1
+    },
+    {
+     "category": "pii",
+     "span": "Hamburg",
+     "allowed": false,
+     "is_sensitive": false,
+     "confidence": 0.1
+    },
+    {
+     "category": "financial",
+     "span": "64000",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 0.9
+    },
+    {
+     "category": "pii",
+     "span": "Ivan Sokolov",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 0.95
+    },
+    {
+     "category": "pii",
+     "span": "41",
+     "allowed": false,
+     "is_sensitive": false,
+     "confidence": 0.1
+    },
+    {
+     "category": "pii",
+     "span": "Berlin",
+     "allowed": false,
+     "is_sensitive": false,
+     "confidence": 0.1
+    },
+    {
+     "category": "financial",
+     "span": "92000",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 0.9
+    },
+    {
+     "category": "pii",
+     "span": "Chloe Martin",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 0.95
+    },
+    {
+     "category": "pii",
+     "span": "35",
+     "allowed": false,
+     "is_sensitive": false,
+     "confidence": 0.1
+    },
+    {
+     "category": "pii",
+     "span": "Lyon",
+     "allowed": false,
+     "is_sensitive": false,
+     "confidence": 0.1
+    },
+    {
+     "category": "financial",
+     "span": "71000",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 0.9
+    }
+   ]
+  },
+  {
+   "run": 0,
+   "id": "pii-address-ru",
+   "group": "pii",
+   "lang": "ru",
+   "host": "chatgpt.com",
+   "expect": "BLOCK",
+   "got": "BLOCK",
+   "outcome": "ok",
+   "score": 1.0,
+   "found": [
+    "pii"
+   ],
+   "want": [
+    "pii"
+   ],
+   "purpose_expect": "work",
+   "purpose_got": "work",
+   "topic": "Courier authorization task",
+   "latency_ms": 17877,
+   "error": null,
+   "findings": [
+    {
+     "category": "pii",
+     "span": "Кузнецова Анна Викторовна",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 0.95
+    },
+    {
+     "category": "pii",
+     "span": "4519 337812",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 1.0
+    },
+    {
+     "category": "pii",
+     "span": "Москва, ул. Профсоюзная, д. 84, кв. 112",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 0.95
+    },
+    {
+     "category": "pii",
+     "span": "+7 916 482-19-07",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 0.95
+    }
+   ]
+  },
+  {
+   "run": 0,
+   "id": "pii-address-ru",
+   "group": "pii",
+   "lang": "ru",
+   "host": "claude.ai",
+   "expect": "BLOCK",
+   "got": "BLOCK",
+   "outcome": "ok",
+   "score": 1.0,
+   "found": [
+    "pii"
+   ],
+   "want": [
+    "pii"
+   ],
+   "purpose_expect": "work",
+   "purpose_got": "work",
+   "topic": "Courier authorization task",
+   "latency_ms": 17551,
+   "error": null,
+   "findings": [
+    {
+     "category": "pii",
+     "span": "Кузнецова Анна Викторовна",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 0.95
+    },
+    {
+     "category": "pii",
+     "span": "4519 337812",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 1.0
+    },
+    {
+     "category": "pii",
+     "span": "Москва, ул. Профсоюзная, д. 84, кв. 112",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 0.95
+    },
+    {
+     "category": "pii",
+     "span": "+7 916 482-19-07",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 0.95
+    }
+   ]
+  },
+  {
+   "run": 0,
+   "id": "pii-translit",
+   "group": "pii",
+   "lang": "ru",
+   "host": "chatgpt.com",
+   "expect": "BLOCK",
+   "got": "BLOCK",
+   "outcome": "ok",
+   "score": 0.95,
+   "found": [
+    "pii"
+   ],
+   "want": [
+    "pii"
+   ],
+   "purpose_expect": "work",
+   "purpose_got": "work",
+   "topic": "Employee data translation",
+   "latency_ms": 18055,
+   "error": null,
+   "findings": [
+    {
+     "category": "pii",
+     "span": "Pavel Smirnov",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 0.95
+    },
+    {
+     "category": "pii",
+     "span": "Sankt-Peterburg, Nevsky prospekt 102, kv 7",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 0.95
+    },
+    {
+     "category": "pii",
+     "span": "8 921 554 30 18",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 0.95
+    },
+    {
+     "category": "pii",
+     "span": "12.04.1988",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 0.95
+    }
+   ]
+  },
+  {
+   "run": 0,
+   "id": "pii-buried",
+   "group": "pii",
+   "lang": "en",
+   "host": "chatgpt.com",
+   "expect": "BLOCK",
+   "got": "BLOCK",
+   "outcome": "ok",
+   "score": 0.95,
+   "found": [
+    "pii"
+   ],
+   "want": [
+    "pii"
+   ],
+   "purpose_expect": "work",
+   "purpose_got": "work",
+   "topic": "Project status update",
+   "latency_ms": 14490,
+   "error": null,
+   "findings": [
+    {
+     "category": "pii",
+     "span": "Monika Schulz",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 0.95
+    },
+    {
+     "category": "pii",
+     "span": "Lindenstrasse 14, 10969 Berlin",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 0.95
+    },
+    {
+     "category": "pii",
+     "span": "+49 171 2234567",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 0.95
+    }
+   ]
+  },
+  {
+   "run": 0,
+   "id": "fin-card-dashes",
+   "group": "financial",
+   "lang": "en",
+   "host": "chatgpt.com",
+   "expect": "BLOCK",
+   "got": "BLOCK",
+   "outcome": "ok",
+   "score": 0.95,
+   "found": [
+    "financial"
+   ],
+   "want": [
+    "financial"
+   ],
+   "purpose_expect": "work",
+   "purpose_got": "work",
+   "topic": "Payment issue resolution",
+   "latency_ms": 15535,
+   "error": null,
+   "findings": [
+    {
+     "category": "financial",
+     "span": "5412-7534-9921-0086",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 0.95
+    },
+    {
+     "category": "financial",
+     "span": "09/28",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 0.9
+    },
+    {
+     "category": "financial",
+     "span": "731",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 0.95
+    }
+   ]
+  },
+  {
+   "run": 0,
+   "id": "fin-card-dashes",
+   "group": "financial",
+   "lang": "en",
+   "host": "claude.ai",
+   "expect": "BLOCK",
+   "got": "BLOCK",
+   "outcome": "ok",
+   "score": 0.95,
+   "found": [
+    "financial"
+   ],
+   "want": [
+    "financial"
+   ],
+   "purpose_expect": "work",
+   "purpose_got": "work",
+   "topic": "Payment issue resolution",
+   "latency_ms": 17699,
+   "error": null,
+   "findings": [
+    {
+     "category": "financial",
+     "span": "5412-7534-9921-0086",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 0.95
+    },
+    {
+     "category": "financial",
+     "span": "09/28",
+     "allowed": false,
+     "is_sensitive": false,
+     "confidence": 0.1
+    },
+    {
+     "category": "financial",
+     "span": "731",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 0.9
+    }
+   ]
+  },
+  {
+   "run": 0,
+   "id": "fin-card-words",
+   "group": "financial",
+   "lang": "en",
+   "host": "chatgpt.com",
+   "expect": "BLOCK",
+   "got": "BLOCK",
+   "outcome": "ok",
+   "score": 0.95,
+   "found": [
+    "financial"
+   ],
+   "want": [
+    "financial"
+   ],
+   "purpose_expect": "work",
+   "purpose_got": "work",
+   "topic": "Customer payment details",
+   "latency_ms": 11907,
+   "error": null,
+   "findings": [
+    {
+     "category": "financial",
+     "span": "four five three two, seven six one two, nine nine eight one, zero zero four two",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 0.95
+    },
+    {
+     "category": "financial",
+     "span": "expiry eleven twenty-seven",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 0.9
+    }
+   ]
+  },
+  {
+   "run": 0,
+   "id": "fin-iban-ru",
+   "group": "financial",
+   "lang": "ru",
+   "host": "chatgpt.com",
+   "expect": "BLOCK",
+   "got": "BLOCK",
+   "outcome": "ok",
+   "score": 1.0,
+   "found": [
+    "financial",
+    "pii"
+   ],
+   "want": [
+    "financial"
+   ],
+   "purpose_expect": "work",
+   "purpose_got": "work",
+   "topic": "Payroll transfer request",
+   "latency_ms": 14925,
+   "error": null,
+   "findings": [
+    {
+     "category": "pii",
+     "span": "Олегу Васильеву",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 0.95
+    },
+    {
+     "category": "financial",
+     "span": "DE89 3704 0044 0532 0130 00",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 1.0
+    }
+   ]
+  },
+  {
+   "run": 0,
+   "id": "fin-iban-ru",
+   "group": "financial",
+   "lang": "ru",
+   "host": "claude.ai",
+   "expect": "BLOCK",
+   "got": "BLOCK",
+   "outcome": "ok",
+   "score": 1.0,
+   "found": [
+    "financial",
+    "pii"
+   ],
+   "want": [
+    "financial"
+   ],
+   "purpose_expect": "work",
+   "purpose_got": "work",
+   "topic": "Payroll transfer request",
+   "latency_ms": 13974,
+   "error": null,
+   "findings": [
+    {
+     "category": "pii",
+     "span": "Олегу Васильеву",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 0.95
+    },
+    {
+     "category": "financial",
+     "span": "DE89 3704 0044 0532 0130 00",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 1.0
+    }
+   ]
+  },
+  {
+   "run": 0,
+   "id": "fin-unreleased-revenue",
+   "group": "financial",
+   "lang": "en",
+   "host": "chatgpt.com",
+   "expect": "STOP",
+   "got": "BLOCK",
+   "outcome": "ok",
+   "score": 0.95,
+   "found": [
+    "financial"
+   ],
+   "want": [
+    "financial"
+   ],
+   "purpose_expect": "work",
+   "purpose_got": "work",
+   "topic": "Board financial update",
+   "latency_ms": 8055,
+   "error": null,
+   "findings": [
+    {
+     "category": "financial",
+     "span": "unaudited Q3 revenue came in at $112.4M",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 0.95
+    }
+   ]
+  },
+  {
+   "run": 0,
+   "id": "fin-unreleased-revenue",
+   "group": "financial",
+   "lang": "en",
+   "host": "claude.ai",
+   "expect": "STOP",
+   "got": "BLOCK",
+   "outcome": "ok",
+   "score": 0.95,
+   "found": [
+    "financial"
+   ],
+   "want": [
+    "financial"
+   ],
+   "purpose_expect": "work",
+   "purpose_got": "work",
+   "topic": "Board financial update",
+   "latency_ms": 8093,
+   "error": null,
+   "findings": [
+    {
+     "category": "financial",
+     "span": "unaudited Q3 revenue came in at $112.4M",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 0.95
+    }
+   ]
+  },
+  {
+   "run": 0,
+   "id": "cust-mrr-json",
+   "group": "customer_data",
+   "lang": "en",
+   "host": "chatgpt.com",
+   "expect": "STOP",
+   "got": "REVIEW",
+   "outcome": "ok",
+   "score": 0.75,
+   "found": [
+    "customer_data"
+   ],
+   "want": [
+    "customer_data"
+   ],
+   "purpose_expect": "work",
+   "purpose_got": "work",
+   "topic": "Customer account prioritization",
+   "latency_ms": 14041,
+   "error": null,
+   "findings": [
+    {
+     "category": "customer_data",
+     "span": "Acme Logistics GmbH",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 0.75
+    },
+    {
+     "category": "customer_data",
+     "span": "Nordwind Retail",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 0.75
+    }
+   ]
+  },
+  {
+   "run": 0,
+   "id": "cust-mrr-json",
+   "group": "customer_data",
+   "lang": "en",
+   "host": "claude.ai",
+   "expect": "STOP",
+   "got": "REVIEW",
+   "outcome": "ok",
+   "score": 0.75,
+   "found": [
+    "customer_data"
+   ],
+   "want": [
+    "customer_data"
+   ],
+   "purpose_expect": "work",
+   "purpose_got": "work",
+   "topic": "Customer account prioritization",
+   "latency_ms": 12701,
+   "error": null,
+   "findings": [
+    {
+     "category": "customer_data",
+     "span": "Acme Logistics GmbH",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 0.75
+    },
+    {
+     "category": "customer_data",
+     "span": "Nordwind Retail",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 0.75
+    }
+   ]
+  },
+  {
+   "run": 0,
+   "id": "cust-churn-ru",
+   "group": "customer_data",
+   "lang": "ru",
+   "host": "chatgpt.com",
+   "expect": "STOP",
+   "got": "BLOCK",
+   "outcome": "ok",
+   "score": 0.95,
+   "found": [
+    "customer_data",
+    "financial",
+    "pii"
+   ],
+   "want": [
+    "customer_data"
+   ],
+   "purpose_expect": "work",
+   "purpose_got": "work",
+   "topic": "Client retention plan",
+   "latency_ms": 28657,
+   "error": null,
+   "findings": [
+    {
+     "category": "customer_data",
+     "span": "ТехноСтрой",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 0.8
+    },
+    {
+     "category": "financial",
+     "span": "MRR 3,2 млн ₽",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 0.95
+    },
+    {
+     "category": "pii",
+     "span": "Ольга Белова",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 0.9
+    },
+    {
+     "category": "pii",
+     "span": "CFO",
+     "allowed": false,
+     "is_sensitive": false,
+     "confidence": 0.1
+    }
+   ]
+  },
+  {
+   "run": 0,
+   "id": "cust-churn-ru",
+   "group": "customer_data",
+   "lang": "ru",
+   "host": "claude.ai",
+   "expect": "STOP",
+   "got": "BLOCK",
+   "outcome": "ok",
+   "score": 0.95,
+   "found": [
+    "customer_data",
+    "financial",
+    "pii"
+   ],
+   "want": [
+    "customer_data"
+   ],
+   "purpose_expect": "work",
+   "purpose_got": "work",
+   "topic": "Client retention plan",
+   "latency_ms": 27601,
+   "error": null,
+   "findings": [
+    {
+     "category": "customer_data",
+     "span": "ТехноСтрой",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 0.8
+    },
+    {
+     "category": "financial",
+     "span": "MRR 3,2 млн ₽",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 0.95
+    },
+    {
+     "category": "pii",
+     "span": "Ольга Белова",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 0.9
+    },
+    {
+     "category": "pii",
+     "span": "CFO",
+     "allowed": false,
+     "is_sensitive": false,
+     "confidence": 0.1
+    }
+   ]
+  },
+  {
+   "run": 0,
+   "id": "cust-contract-buried",
+   "group": "customer_data",
+   "lang": "en",
+   "host": "chatgpt.com",
+   "expect": "STOP",
+   "got": "BLOCK",
+   "outcome": "ok",
+   "score": 0.95,
+   "found": [
+    "customer_data",
+    "financial"
+   ],
+   "want": [
+    "customer_data"
+   ],
+   "purpose_expect": "work",
+   "purpose_got": "work",
+   "topic": "Sprint review update",
+   "latency_ms": 12513,
+   "error": null,
+   "findings": [
+    {
+     "category": "customer_data",
+     "span": "Globex",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 0.75
+    },
+    {
+     "category": "financial",
+     "span": "$1.38M ARR",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 0.95
+    }
+   ]
+  },
+  {
+   "run": 0,
+   "id": "doc-mna",
+   "group": "internal_docs",
+   "lang": "en",
+   "host": "chatgpt.com",
+   "expect": "STOP",
+   "got": "ALLOW",
+   "outcome": "leak",
+   "score": 0.0,
+   "found": [],
+   "want": [
+    "internal_docs"
+   ],
+   "purpose_expect": "work",
+   "purpose_got": "work",
+   "topic": "Acquisition strategy planning",
+   "latency_ms": 1349,
+   "error": null,
+   "findings": []
+  },
+  {
+   "run": 0,
+   "id": "doc-mna",
+   "group": "internal_docs",
+   "lang": "en",
+   "host": "claude.ai",
+   "expect": "ALLOW",
+   "got": "ALLOW",
+   "outcome": "ok",
+   "score": 0.0,
+   "found": [],
+   "want": [
+    "internal_docs"
+   ],
+   "purpose_expect": "work",
+   "purpose_got": "work",
+   "topic": "Acquisition strategy planning",
+   "latency_ms": 1103,
+   "error": null,
+   "findings": []
+  },
+  {
+   "run": 0,
+   "id": "cred-dsn",
+   "group": "credentials",
+   "lang": "en",
+   "host": "chatgpt.com",
+   "expect": "BLOCK",
+   "got": "BLOCK",
+   "outcome": "ok",
+   "score": 1.0,
+   "found": [
+    "credentials"
+   ],
+   "want": [
+    "credentials"
+   ],
+   "purpose_expect": "work",
+   "purpose_got": "work",
+   "topic": "Database connection issue",
+   "latency_ms": 8140,
+   "error": null,
+   "findings": [
+    {
+     "category": "credentials",
+     "span": "postgresql://billing_svc:Rk7!vQ2#pLx9@prod-db-03.internal:5432/billing?sslmode=require",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 1.0
+    }
+   ]
+  },
+  {
+   "run": 0,
+   "id": "cred-dsn",
+   "group": "credentials",
+   "lang": "en",
+   "host": "claude.ai",
+   "expect": "BLOCK",
+   "got": "BLOCK",
+   "outcome": "ok",
+   "score": 1.0,
+   "found": [
+    "credentials"
+   ],
+   "want": [
+    "credentials"
+   ],
+   "purpose_expect": "work",
+   "purpose_got": "work",
+   "topic": "Database connection issue",
+   "latency_ms": 8997,
+   "error": null,
+   "findings": [
+    {
+     "category": "credentials",
+     "span": "postgresql://billing_svc:Rk7!vQ2#pLx9@prod-db-03.internal:5432/billing?sslmode=require",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 1.0
+    }
+   ]
+  },
+  {
+   "run": 0,
+   "id": "cred-slack-log",
+   "group": "credentials",
+   "lang": "en",
+   "host": "chatgpt.com",
+   "expect": "BLOCK",
+   "got": "BLOCK",
+   "outcome": "ok",
+   "score": 0.95,
+   "found": [
+    "credentials"
+   ],
+   "want": [
+    "credentials"
+   ],
+   "purpose_expect": "work",
+   "purpose_got": "work",
+   "topic": "Error log analysis",
+   "latency_ms": 9184,
+   "error": null,
+   "findings": [
+    {
+     "category": "credentials",
+     "span": "X-Internal-Token: itk_live_7731920045_aQ9vZp3LmW8tN2kR",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 0.95
+    }
+   ]
+  },
+  {
+   "run": 0,
+   "id": "cred-slack-log",
+   "group": "credentials",
+   "lang": "en",
+   "host": "claude.ai",
+   "expect": "BLOCK",
+   "got": "BLOCK",
+   "outcome": "ok",
+   "score": 0.95,
+   "found": [
+    "credentials"
+   ],
+   "want": [
+    "credentials"
+   ],
+   "purpose_expect": "work",
+   "purpose_got": "work",
+   "topic": "Error log analysis",
+   "latency_ms": 8469,
+   "error": null,
+   "findings": [
+    {
+     "category": "credentials",
+     "span": "X-Internal-Token: itk_live_7731920045_aQ9vZp3LmW8tN2kR",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 0.95
+    }
+   ]
+  },
+  {
+   "run": 0,
+   "id": "code-internal",
+   "group": "source_code",
+   "lang": "en",
+   "host": "chatgpt.com",
+   "expect": "STOP",
+   "got": "REVIEW",
+   "outcome": "ok",
+   "score": 0.8,
+   "found": [
+    "source_code"
+   ],
+   "want": [
+    "source_code"
+   ],
+   "purpose_expect": "work",
+   "purpose_got": "work",
+   "topic": "Code review optimization",
+   "latency_ms": 10981,
+   "error": null,
+   "findings": [
+    {
+     "category": "source_code",
+     "span": "MARKUP_TABLE",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 0.8
+    },
+    {
+     "category": "source_code",
+     "span": "STRATEGIC_VENDORS",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 0.8
+    }
+   ]
+  },
+  {
+   "run": 0,
+   "id": "code-internal",
+   "group": "source_code",
+   "lang": "en",
+   "host": "claude.ai",
+   "expect": "ALLOW",
+   "got": "ALLOW",
+   "outcome": "ok",
+   "score": 0.0,
+   "found": [],
+   "want": [
+    "source_code"
+   ],
+   "purpose_expect": "work",
+   "purpose_got": "work",
+   "topic": "Code review optimization",
+   "latency_ms": 3885,
+   "error": null,
+   "findings": [
+    {
+     "category": "source_code",
+     "span": "MARKUP_TABLE",
+     "allowed": true,
+     "is_sensitive": null,
+     "confidence": null
+    },
+    {
+     "category": "source_code",
+     "span": "STRATEGIC_VENDORS",
+     "allowed": true,
+     "is_sensitive": null,
+     "confidence": null
+    }
+   ]
+  },
+  {
+   "run": 0,
+   "id": "neg-public-financials",
+   "group": "hard_negative",
+   "lang": "en",
+   "host": "chatgpt.com",
+   "expect": "ALLOW",
+   "got": "ALLOW",
+   "outcome": "ok",
+   "score": 0.0,
+   "found": [],
+   "want": [],
+   "purpose_expect": "work",
+   "purpose_got": "work",
+   "topic": "Business performance analysis",
+   "latency_ms": 1593,
+   "error": null,
+   "findings": []
+  },
+  {
+   "run": 0,
+   "id": "neg-public-ceo",
+   "group": "hard_negative",
+   "lang": "en",
+   "host": "chatgpt.com",
+   "expect": "ALLOW",
+   "got": "ALLOW",
+   "outcome": "ok",
+   "score": 0.0,
+   "found": [],
+   "want": [],
+   "purpose_expect": "work",
+   "purpose_got": "work",
+   "topic": "Social media post",
+   "latency_ms": 1312,
+   "error": null,
+   "findings": []
+  },
+  {
+   "run": 0,
+   "id": "neg-historical-health",
+   "group": "hard_negative",
+   "lang": "en",
+   "host": "chatgpt.com",
+   "expect": "ALLOW",
+   "got": "ALLOW",
+   "outcome": "ok",
+   "score": 0.0,
+   "found": [],
+   "want": [],
+   "purpose_expect": "work",
+   "purpose_got": "work",
+   "topic": "Safety talk summary",
+   "latency_ms": 1678,
+   "error": null,
+   "findings": []
+  },
+  {
+   "run": 0,
+   "id": "neg-fictional",
+   "group": "hard_negative",
+   "lang": "en",
+   "host": "chatgpt.com",
+   "expect": "ALLOW",
+   "got": "ALLOW",
+   "outcome": "ok",
+   "score": 0.0,
+   "found": [],
+   "want": [],
+   "purpose_expect": "work",
+   "purpose_got": "work",
+   "topic": "Demo data creation",
+   "latency_ms": 1535,
+   "error": null,
+   "findings": []
+  },
+  {
+   "run": 0,
+   "id": "neg-stripe-test-card",
+   "group": "hard_negative",
+   "lang": "en",
+   "host": "chatgpt.com",
+   "expect": "ALLOW",
+   "got": "ALLOW",
+   "outcome": "ok",
+   "score": 0.0,
+   "found": [],
+   "want": [],
+   "purpose_expect": "work",
+   "purpose_got": "work",
+   "topic": "Checkout testing issue",
+   "latency_ms": 1374,
+   "error": null,
+   "findings": []
+  },
+  {
+   "run": 0,
+   "id": "neg-example-contacts",
+   "group": "hard_negative",
+   "lang": "en",
+   "host": "chatgpt.com",
+   "expect": "ALLOW",
+   "got": "ALLOW",
+   "outcome": "ok",
+   "score": 0.0,
+   "found": [],
+   "want": [],
+   "purpose_expect": "work",
+   "purpose_got": "work",
+   "topic": "Unit test generation",
+   "latency_ms": 1809,
+   "error": null,
+   "findings": []
+  },
+  {
+   "run": 0,
+   "id": "neg-placeholder-key",
+   "group": "hard_negative",
+   "lang": "en",
+   "host": "chatgpt.com",
+   "expect": "ALLOW",
+   "got": "ALLOW",
+   "outcome": "ok",
+   "score": 0.0,
+   "found": [],
+   "want": [],
+   "purpose_expect": "work",
+   "purpose_got": "work",
+   "topic": "SDK configuration query",
+   "latency_ms": 1341,
+   "error": null,
+   "findings": []
+  },
+  {
+   "run": 0,
+   "id": "neg-code-question-ru",
+   "group": "hard_negative",
+   "lang": "ru",
+   "host": "chatgpt.com",
+   "expect": "ALLOW",
+   "got": "ALLOW",
+   "outcome": "ok",
+   "score": 0.0,
+   "found": [],
+   "want": [],
+   "purpose_expect": "work",
+   "purpose_got": "work",
+   "topic": "Python sorting question",
+   "latency_ms": 1274,
+   "error": null,
+   "findings": []
+  },
+  {
+   "run": 0,
+   "id": "nw-borscht-ru",
+   "group": "non_work",
+   "lang": "ru",
+   "host": "chatgpt.com",
+   "expect": "ALLOW",
+   "got": "ALLOW",
+   "outcome": "ok",
+   "score": 0.0,
+   "found": [],
+   "want": [],
+   "purpose_expect": "non_work",
+   "purpose_got": "non_work",
+   "topic": "Cooking recipe request",
+   "latency_ms": 1664,
+   "error": null,
+   "findings": []
+  },
+  {
+   "run": 0,
+   "id": "nw-homework",
+   "group": "non_work",
+   "lang": "en",
+   "host": "chatgpt.com",
+   "expect": "ALLOW",
+   "got": "ALLOW",
+   "outcome": "ok",
+   "score": 0.0,
+   "found": [],
+   "want": [],
+   "purpose_expect": "non_work",
+   "purpose_got": "non_work",
+   "topic": "Child homework help",
+   "latency_ms": 1732,
+   "error": null,
+   "findings": []
+  },
+  {
+   "run": 0,
+   "id": "nw-italy-trip",
+   "group": "non_work",
+   "lang": "en",
+   "host": "chatgpt.com",
+   "expect": "ALLOW",
+   "got": "ALLOW",
+   "outcome": "ok",
+   "score": 0.0,
+   "found": [],
+   "want": [],
+   "purpose_expect": "non_work",
+   "purpose_got": "non_work",
+   "topic": "Family travel planning",
+   "latency_ms": 1366,
+   "error": null,
+   "findings": []
+  },
+  {
+   "run": 0,
+   "id": "nw-italy-trip",
+   "group": "non_work",
+   "lang": "en",
+   "host": "claude.ai",
+   "expect": "ALLOW",
+   "got": "ALLOW",
+   "outcome": "ok",
+   "score": 0.0,
+   "found": [],
+   "want": [],
+   "purpose_expect": "non_work",
+   "purpose_got": "non_work",
+   "topic": "Family travel planning",
+   "latency_ms": 1223,
+   "error": null,
+   "findings": []
+  },
+  {
+   "run": 0,
+   "id": "nw-birthday-poem-ru",
+   "group": "non_work",
+   "lang": "ru",
+   "host": "chatgpt.com",
+   "expect": "ALLOW",
+   "got": "ALLOW",
+   "outcome": "ok",
+   "score": 0.0,
+   "found": [],
+   "want": [],
+   "purpose_expect": "non_work",
+   "purpose_got": "non_work",
+   "topic": "Personal creative request",
+   "latency_ms": 2030,
+   "error": null,
+   "findings": []
+  },
+  {
+   "run": 0,
+   "id": "w-rust-learning",
+   "group": "work_borderline",
+   "lang": "en",
+   "host": "chatgpt.com",
+   "expect": "ALLOW",
+   "got": "ALLOW",
+   "outcome": "ok",
+   "score": 0.0,
+   "found": [],
+   "want": [],
+   "purpose_expect": "work",
+   "purpose_got": "work",
+   "topic": "Learning Rust programming",
+   "latency_ms": 1382,
+   "error": null,
+   "findings": []
+  },
+  {
+   "run": 0,
+   "id": "w-hr-vacation-ru",
+   "group": "work_borderline",
+   "lang": "ru",
+   "host": "chatgpt.com",
+   "expect": "ALLOW",
+   "got": "ALLOW",
+   "outcome": "ok",
+   "score": 0.0,
+   "found": [],
+   "want": [],
+   "purpose_expect": "work",
+   "purpose_got": "work",
+   "topic": "Vacation request planning",
+   "latency_ms": 1638,
+   "error": null,
+   "findings": []
+  },
+  {
+   "run": 0,
+   "id": "w-seo-trends",
+   "group": "work_borderline",
+   "lang": "en",
+   "host": "claude.ai",
+   "expect": "ALLOW",
+   "got": "ALLOW",
+   "outcome": "ok",
+   "score": 0.0,
+   "found": [],
+   "want": [],
+   "purpose_expect": "work",
+   "purpose_got": "work",
+   "topic": "SEO trends research",
+   "latency_ms": 1212,
+   "error": null,
+   "findings": []
+  }
+ ]
+}

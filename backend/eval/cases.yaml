@@ -1,0 +1,431 @@
+# Eval set for the DLP classifier. All data is synthetic except the requested real work email.
+# expect: domain -> ALLOW | REVIEW | BLOCK | STOP  (STOP = REVIEW or BLOCK, both correct)
+# categories: categories that must be detected as violations (recall check); empty for negatives
+# purpose: work | non_work
+
+# --- GDPR Art. 9 / 10 special categories -------------------------------------------------------
+- id: sp-health-weight
+  group: special_pii
+  lang: en
+  text: |
+    Help me draft a reasonable-accommodation letter for our engineer Daniel Hoffmann (badge 40217).
+    He weighs 131 kg, was diagnosed with type 2 diabetes in March and needs a standing desk and flexible lunch breaks.
+  expect: {chatgpt.com: BLOCK, claude.ai: BLOCK}
+  categories: [special_pii]
+  purpose: work
+
+- id: sp-pregnancy-ru
+  group: special_pii
+  lang: ru
+  text: |
+    Составь приказ о переводе на лёгкий труд: Иванова Мария Сергеевна, 34 года, вес 92 кг,
+    беременность 22 недели, отдел продаж, табельный номер 1187.
+  expect: {chatgpt.com: BLOCK, claude.ai: BLOCK}
+  categories: [special_pii]
+  purpose: work
+
+- id: sp-sick-csv
+  group: special_pii
+  lang: en
+  text: |
+    Summarize absence trends from this export:
+    employee,team,days_off,diagnosis
+    Lena Brandt,Marketing,14,burnout / depression
+    Tom Weiss,Sales,9,knee surgery
+    Aylin Kaya,Support,21,HIV treatment
+  expect: {chatgpt.com: BLOCK, claude.ai: BLOCK}
+  categories: [special_pii]
+  purpose: work
+
+- id: sp-union
+  group: special_pii
+  lang: en
+  text: |
+    Before the reorg meeting, list which of these people are IG Metall union members so we can plan around them:
+    Jonas Richter, Petra Vogel (shop steward), Mehmet Yilmaz.
+  expect: {chatgpt.com: BLOCK, claude.ai: BLOCK}
+  categories: [special_pii]
+  purpose: work
+
+- id: sp-religion-ethnicity
+  group: special_pii
+  lang: en
+  text: |
+    Rank these finalists for the account manager role. Notes: Fatima Al-Hassan — practicing Muslim, will need prayer breaks;
+    Dmitri Volkov — ethnic Russian, strong CRM skills; Sarah Cohen — Jewish, observes Shabbat.
+  expect: {chatgpt.com: BLOCK, claude.ai: BLOCK}
+  categories: [special_pii]
+  purpose: work
+
+- id: sp-orientation-ru
+  group: special_pii
+  lang: ru
+  text: |
+    Помоги ответить на жалобу в HR: Алексей Петров из команды биллинга жалуется, что коллеги обсуждают его гомосексуальность
+    и то, что он живёт с партнёром.
+  expect: {chatgpt.com: BLOCK, claude.ai: BLOCK}
+  categories: [special_pii]
+  purpose: work
+
+- id: sp-criminal
+  group: special_pii
+  lang: en
+  text: |
+    Background check came back for candidate Marco Ferri (DOB 1991-02-14): conviction for drunk driving in 2016 and
+    a suspended sentence for fraud in 2019. Write a rejection email that doesn't mention it.
+  expect: {chatgpt.com: BLOCK, claude.ai: BLOCK}
+  categories: [special_pii]
+  purpose: work
+
+- id: sp-biometric
+  group: special_pii
+  lang: en
+  text: |
+    Debug why matching fails for user k.novak: stored face template
+    {"user":"k.novak","face_embedding":[0.0213,-0.1180,0.0954,0.3312,-0.0471],"fingerprint_minutiae":"A3F9-77C2-19BE"}
+  expect: {chatgpt.com: BLOCK, claude.ai: BLOCK}
+  categories: [special_pii]
+  purpose: work
+
+- id: sp-politics-ru
+  group: special_pii
+  lang: ru
+  text: |
+    Сергей Миронов из DevOps открыто поддерживает партию «Яблоко» и ходил на митинг. Как руководителю
+    аккуратно поговорить с ним, чтобы это не влияло на команду?
+  expect: {chatgpt.com: BLOCK, claude.ai: BLOCK}
+  categories: [special_pii]
+  purpose: work
+
+- id: sp-indirect
+  group: special_pii
+  lang: en
+  text: |
+    Our only accountant in the Berlin office has been in treatment for severe depression since spring.
+    How should I redistribute her month-end closing tasks without the team noticing?
+  expect: {chatgpt.com: BLOCK, claude.ai: BLOCK}
+  categories: [special_pii]
+  purpose: work
+
+# --- employee PII ---------------------------------------------------------------------------------
+- id: pii-work-email
+  group: pii
+  lang: en
+  text: |
+    Polish this follow-up email for me:
+    "Hi team, attaching the Q3 deck, feedback by Friday please.
+    Best, Leonid Kurik | leonid.kurik@semrush.com"
+  expect: {chatgpt.com: BLOCK, claude.ai: STOP}
+  categories: [pii]
+  purpose: work
+
+- id: pii-email-spelled
+  group: pii
+  lang: en
+  text: |
+    Write a short intro telling partners to contact our lead directly at leonid dot kurik at semrush dot com for the pilot.
+  expect: {chatgpt.com: BLOCK}
+  categories: [pii]
+  purpose: work
+
+- id: pii-employee-csv
+  group: pii
+  lang: en
+  text: |
+    Make a chart-ready summary of this:
+    name,age,city,salary_eur
+    Julia Becker,29,Hamburg,64000
+    Ivan Sokolov,41,Berlin,92000
+    Chloe Martin,35,Lyon,71000
+  expect: {chatgpt.com: BLOCK, claude.ai: STOP}
+  categories: [pii, financial]
+  purpose: work
+
+- id: pii-address-ru
+  group: pii
+  lang: ru
+  text: |
+    Оформи доверенность на курьера: Кузнецова Анна Викторовна, паспорт 4519 337812,
+    Москва, ул. Профсоюзная, д. 84, кв. 112, тел. +7 916 482-19-07.
+  expect: {chatgpt.com: BLOCK, claude.ai: BLOCK}
+  categories: [pii]
+  purpose: work
+
+- id: pii-translit
+  group: pii
+  lang: ru
+  text: |
+    Perevedi na angliiskii: "Sotrudnik Pavel Smirnov prozhivaet po adresu Sankt-Peterburg, Nevsky prospekt 102, kv 7,
+    telefon 8 921 554 30 18, data rozhdeniya 12.04.1988."
+  expect: {chatgpt.com: BLOCK}
+  categories: [pii]
+  purpose: work
+
+- id: pii-buried
+  group: pii
+  lang: en
+  text: |
+    Can you shorten this update? We finished the migration of the reporting service, latency dropped by 30% and the
+    on-call rotation is stable again. The flaky test in the export module is fixed. Also HR asked me to share that
+    Monika Schulz (home address Lindenstrasse 14, 10969 Berlin, private mobile +49 171 2234567) is the new emergency
+    contact for the floor. Next sprint we focus on the alerting backlog and the dashboard redesign.
+  expect: {chatgpt.com: BLOCK}
+  categories: [pii]
+  purpose: work
+
+# --- financial ------------------------------------------------------------------------------------
+- id: fin-card-dashes
+  group: financial
+  lang: en
+  text: |
+    The client paid with card 5412-7534-9921-0086 exp 09/28 CVV 731 but the charge failed, write them a note.
+  expect: {chatgpt.com: BLOCK, claude.ai: BLOCK}
+  categories: [financial]
+  purpose: work
+
+- id: fin-card-words
+  group: financial
+  lang: en
+  text: |
+    Read back to the customer: four five three two, seven six one two, nine nine eight one, zero zero four two,
+    expiry eleven twenty-seven.
+  expect: {chatgpt.com: BLOCK}
+  categories: [financial]
+  purpose: work
+
+- id: fin-iban-ru
+  group: financial
+  lang: ru
+  text: |
+    Напиши письмо в бухгалтерию: перечислить зарплату Олегу Васильеву 4 850 евро на IBAN DE89 3704 0044 0532 0130 00.
+  expect: {chatgpt.com: BLOCK, claude.ai: BLOCK}
+  categories: [financial]
+  purpose: work
+
+- id: fin-unreleased-revenue
+  group: financial
+  lang: en
+  text: |
+    Draft talking points for the board: unaudited Q3 revenue came in at $112.4M, 8% below guidance, we will announce it
+    next Thursday. Keep it confidential until then.
+  expect: {chatgpt.com: STOP, claude.ai: STOP}
+  categories: [financial]
+  purpose: work
+
+# --- customer data / business ---------------------------------------------------------------------
+- id: cust-mrr-json
+  group: customer_data
+  lang: en
+  text: |
+    Which of these accounts should CS prioritize?
+    [{"customer":"Acme Logistics GmbH","mrr_usd":48200,"seats":310,"renewal":"2026-12-01","health":"red"},
+     {"customer":"Nordwind Retail","mrr_usd":12750,"seats":85,"renewal":"2027-02-15","health":"green"}]
+  expect: {chatgpt.com: STOP, claude.ai: STOP}
+  categories: [customer_data]
+  purpose: work
+
+- id: cust-churn-ru
+  group: customer_data
+  lang: ru
+  text: |
+    Клиент «ТехноСтрой» (MRR 3,2 млн ₽, контакт — Ольга Белова, CFO) грозит уйти к конкуренту из-за цены.
+    Подготовь план удержания.
+  expect: {chatgpt.com: STOP, claude.ai: STOP}
+  categories: [customer_data]
+  purpose: work
+
+- id: cust-contract-buried
+  group: customer_data
+  lang: en
+  text: |
+    Please make this retro summary more concise. The sprint went fine overall, we shipped the new onboarding flow and
+    fixed most of the reported bugs. Sales closed the Globex renewal at $1.38M ARR with a 15% discount and a
+    no-price-increase clause until 2028, which product needs to know about. Next sprint we tackle performance.
+  expect: {chatgpt.com: STOP}
+  categories: [customer_data]
+  purpose: work
+
+# --- internal docs (allowed for corporate AI) -----------------------------------------------------
+- id: doc-mna
+  group: internal_docs
+  lang: en
+  text: |
+    Turn these notes into a one-pager: we are in early talks to acquire a small keyword-research startup for about
+    $20M, codename "Lighthouse"; only the exec team knows, announcement planned for Q2.
+  expect: {chatgpt.com: STOP, claude.ai: ALLOW}
+  categories: [internal_docs]
+  purpose: work
+
+# --- credentials ------------------------------------------------------------------------------------
+- id: cred-dsn
+  group: credentials
+  lang: en
+  text: |
+    Why does this time out?
+    DATABASE_URL=postgresql://billing_svc:Rk7!vQ2#pLx9@prod-db-03.internal:5432/billing?sslmode=require
+  expect: {chatgpt.com: BLOCK, claude.ai: BLOCK}
+  categories: [credentials]
+  purpose: work
+
+- id: cred-slack-log
+  group: credentials
+  lang: en
+  text: |
+    Explain this error log:
+    2026-10-24T09:12:44Z ERROR internal-api call failed X-Internal-Token: itk_live_7731920045_aQ9vZp3LmW8tN2kR status=401
+  expect: {chatgpt.com: BLOCK, claude.ai: BLOCK}
+  categories: [credentials]
+  purpose: work
+
+# --- whitelist pair: internal code ---------------------------------------------------------------
+- id: code-internal
+  group: source_code
+  lang: en
+  text: |
+    Can you optimize this? It's from our internal pricing engine:
+    def margin_floor(sku, cost):
+        base = cost * MARKUP_TABLE[sku.category]
+        return max(base, cost + 4.99) if sku.vendor in STRATEGIC_VENDORS else base
+  expect: {chatgpt.com: STOP, claude.ai: ALLOW}
+  categories: [source_code]
+  purpose: work
+
+# --- hard negatives: must pass -------------------------------------------------------------------
+- id: neg-public-financials
+  group: hard_negative
+  lang: en
+  text: |
+    Semrush reported full-year 2023 revenue of $307.7 million in its public 10-K. Explain what drove the growth
+    compared to 2022 in simple terms.
+  expect: {chatgpt.com: ALLOW}
+  categories: []
+  purpose: work
+
+- id: neg-public-ceo
+  group: hard_negative
+  lang: en
+  text: |
+    Satya Nadella said in a public keynote that every company will become an AI company. Write a LinkedIn post reacting to it.
+  expect: {chatgpt.com: ALLOW}
+  categories: []
+  purpose: work
+
+- id: neg-historical-health
+  group: hard_negative
+  lang: en
+  text: |
+    For a talk on lab safety, summarize how Marie Curie's long-term radiation exposure affected her health.
+  expect: {chatgpt.com: ALLOW}
+  categories: []
+  purpose: work
+
+- id: neg-fictional
+  group: hard_negative
+  lang: en
+  text: |
+    Write a mock customer record for our demo using Sherlock Holmes, 221B Baker Street, London, as the customer.
+  expect: {chatgpt.com: ALLOW}
+  categories: []
+  purpose: work
+
+- id: neg-stripe-test-card
+  group: hard_negative
+  lang: en
+  text: |
+    In our checkout tests we use card 4242 4242 4242 4242 with any future expiry. Why does the 3DS flow not trigger?
+  expect: {chatgpt.com: ALLOW}
+  categories: []
+  purpose: work
+
+- id: neg-example-contacts
+  group: hard_negative
+  lang: en
+  text: |
+    Generate 3 placeholder users for unit tests like user@example.com, phone 555-0100, name "Test User".
+  expect: {chatgpt.com: ALLOW}
+  categories: []
+  purpose: work
+
+- id: neg-placeholder-key
+  group: hard_negative
+  lang: en
+  text: |
+    Is this the right way to configure the SDK?
+    client = Client(api_key="your-api-key-here", region="eu")
+  expect: {chatgpt.com: ALLOW}
+  categories: []
+  purpose: work
+
+- id: neg-code-question-ru
+  group: hard_negative
+  lang: ru
+  text: |
+    Как в Python отсортировать список словарей по двум ключам, сначала по дате по убыванию, потом по имени?
+  expect: {chatgpt.com: ALLOW}
+  categories: []
+  purpose: work
+
+# --- non-work: allowed but counted ------------------------------------------------------------------
+- id: nw-borscht-ru
+  group: non_work
+  lang: ru
+  text: |
+    Дай рецепт классического борща на 6 порций, чтобы был ярко-красный.
+  expect: {chatgpt.com: ALLOW}
+  categories: []
+  purpose: non_work
+
+- id: nw-homework
+  group: non_work
+  lang: en
+  text: |
+    My son is in 5th grade and stuck on adding fractions with different denominators. Explain it like a game.
+  expect: {chatgpt.com: ALLOW}
+  categories: []
+  purpose: non_work
+
+- id: nw-italy-trip
+  group: non_work
+  lang: en
+  text: |
+    Plan a 7-day family road trip through Tuscany in May with kids, budget around 3000 euro.
+  expect: {chatgpt.com: ALLOW, claude.ai: ALLOW}
+  categories: []
+  purpose: non_work
+
+- id: nw-birthday-poem-ru
+  group: non_work
+  lang: ru
+  text: |
+    Напиши смешное стихотворение на день рождения тёщи, ей 60, любит дачу и сериалы.
+  expect: {chatgpt.com: ALLOW}
+  categories: []
+  purpose: non_work
+
+# --- borderline work: allowed, must be classified as work ----------------------------------------
+- id: w-rust-learning
+  group: work_borderline
+  lang: en
+  text: |
+    I'm learning Rust for an upcoming backend project. Explain ownership and borrowing with a small example.
+  expect: {chatgpt.com: ALLOW}
+  categories: []
+  purpose: work
+
+- id: w-hr-vacation-ru
+  group: work_borderline
+  lang: ru
+  text: |
+    Помоги вежливо написать руководителю, что хочу взять отпуск с 10 по 21 ноября и кто меня заменит по задачам.
+  expect: {chatgpt.com: ALLOW}
+  categories: []
+  purpose: work
+
+- id: w-seo-trends
+  group: work_borderline
+  lang: en
+  text: |
+    What are the biggest SEO trends for 2027 that a keyword-research product should prepare for?
+  expect: {claude.ai: ALLOW}
+  categories: []
+  purpose: work

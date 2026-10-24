@@ -25,6 +25,7 @@ class Policies:
     domains: dict[str, list[str]]
     skip_paths: list[str]
     min_text_chars: int
+    purpose_rule: str
     raw: dict = field(repr=False, default_factory=dict)
 
     def match_domain(self, host: str, domains: list[str]) -> str | None:
@@ -82,6 +83,7 @@ def parse(raw: dict) -> Policies:
         domains={d: list(a or []) for d, a in domains.items()},
         skip_paths=raw.get("skip_paths") or [],
         min_text_chars=int(raw.get("min_text_chars", 12)),
+        purpose_rule=str(raw.get("purpose") or ""),
         raw=raw,
     )
 

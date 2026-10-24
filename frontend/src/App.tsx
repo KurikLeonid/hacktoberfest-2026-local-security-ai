@@ -67,7 +67,7 @@ export default function App() {
       <header className="border-b border-slate-200 bg-white">
         <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-4 px-4 py-3">
           <div className="flex items-center gap-2">
-            <span className="text-xl">🛡️</span>
+            <img src="/logo.svg" alt="Local DLP Guard" className="h-10 w-auto" />
             <span className="font-semibold">Local DLP Guard</span>
             {runtime && !runtime.local ? (
               <span className="rounded bg-rose-600 px-2 py-0.5 text-xs font-semibold text-white">

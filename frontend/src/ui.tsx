@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react'
-import type { Finding, Tier, Status } from './api'
+import type { Finding, Purpose, Tier, Status } from './api'
 
 const tierStyle: Record<Tier, string> = {
   ALLOW: 'bg-emerald-100 text-emerald-800 ring-emerald-300',
@@ -89,7 +89,7 @@ export function FindingsList({ findings }: { findings: Finding[] }) {
     <ul className="space-y-1 text-sm">
       {findings.map((f, i) => (
         <li key={i} className="flex flex-wrap items-baseline gap-2">
-          <span className="rounded bg-slate-100 px-1.5 text-xs font-medium">{f.category}</span>
+          <CategoryChip category={f.category} />
           <code className="text-xs">{f.span.length > 60 ? f.span.slice(0, 60) + '…' : f.span}</code>
           {f.allowed ? (
             <span className="text-xs text-emerald-700">разрешено для домена</span>
@@ -102,6 +102,27 @@ export function FindingsList({ findings }: { findings: Finding[] }) {
         </li>
       ))}
     </ul>
+  )
+}
+
+export function CategoryChip({ category }: { category: string }) {
+  const special = category === 'special_pii'
+  return (
+    <span
+      className={`rounded px-1.5 text-xs font-medium ${special ? 'bg-fuchsia-600 text-white' : 'bg-slate-100'}`}
+      title={special ? 'GDPR ст. 9/10: здоровье, вес, религия, происхождение, ориентация, профсоюз, политика, судимости' : undefined}
+    >
+      {special ? 'special_pii · GDPR ст. 9' : category}
+    </span>
+  )
+}
+
+export function PurposeTag({ purpose }: { purpose: Purpose | null }) {
+  if (!purpose || purpose.work) return null
+  return (
+    <span className="rounded bg-sky-100 px-1.5 text-xs text-sky-800" title={`уверенность ${Math.round(purpose.confidence * 100)}%`}>
+      нецелевой: {purpose.topic || '—'}
+    </span>
   )
 }
 

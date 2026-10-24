@@ -10,3 +10,4 @@ data/hf_cache/
 data/*.log
 .env
 *.env
+data/eval-archive/

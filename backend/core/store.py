@@ -58,21 +58,26 @@ def connect():
 def init():
     with connect() as c:
         c.executescript(SCHEMA)
+        cols = {r[1] for r in c.execute("PRAGMA table_info(events)")}
+        if "purpose" not in cols:  # added in stage 2: work / non-work judgement
+            c.execute("ALTER TABLE events ADD COLUMN purpose TEXT")
 
 
 def _event(row: sqlite3.Row) -> dict:
     d = dict(row)
     d["findings"] = json.loads(d["findings"])
+    d["purpose"] = json.loads(d["purpose"]) if d.get("purpose") else None
     return d
 
 
 # --- events -----------------------------------------------------------------
 
-def insert_event(*, host, path, adapter, text, tier, score, findings, status, error=None, latency_ms=None) -> dict:
+def insert_event(*, host, path, adapter, text, tier, score, findings, status, error=None, latency_ms=None, purpose=None) -> dict:
     ev = dict(
         id=uuid.uuid4().hex[:12], created_at=time.time(), host=host, path=path, adapter=adapter,
         text=text, tier=tier, score=score, findings=json.dumps(findings, ensure_ascii=False),
         status=status, error=error, latency_ms=latency_ms, decided_at=None,
+        purpose=json.dumps(purpose, ensure_ascii=False) if purpose else None,
     )
     with connect() as c:
         c.execute(f"INSERT INTO events ({','.join(ev)}) VALUES ({','.join('?' * len(ev))})", list(ev.values()))
@@ -104,6 +109,24 @@ def set_status(event_id: str, status: str, only_if: str | None = None) -> bool:
         return c.execute(q, args).rowcount > 0
 
 
+def purpose_stats(since: float) -> dict:
+    """Share of non-work requests per domain and top non-work topics since a timestamp."""
+    with connect() as c:
+        rows = c.execute("SELECT host, purpose FROM events WHERE created_at>=? AND purpose IS NOT NULL", (since,)).fetchall()
+    by_host: dict[str, dict] = {}
+    topics: dict[str, int] = {}
+    for r in rows:
+        p = json.loads(r["purpose"])
+        h = by_host.setdefault(r["host"], {"host": r["host"], "total": 0, "non_work": 0})
+        h["total"] += 1
+        if not p.get("work", True):
+            h["non_work"] += 1
+            t = (p.get("topic") or "other").lower()
+            topics[t] = topics.get(t, 0) + 1
+    top = sorted(topics.items(), key=lambda x: -x[1])[:8]
+    return {"domains": sorted(by_host.values(), key=lambda h: -h["total"]), "topics": [{"topic": t, "n": n} for t, n in top]}
+
+
 # --- dataset ----------------------------------------------------------------
 
 def add_examples(rows: list[dict], source: str) -> int:
@@ -120,14 +143,16 @@ def add_examples(rows: list[dict], source: str) -> int:
     return len(vals)
 
 
-def examples_for(category: str, k_each: int = 3) -> list[dict]:
-    """Few-shot examples for a category: security decisions first, then random others, per label."""
+def examples_for(category: str, k_each: int = 3, sources: str = "all") -> list[dict]:
+    """Few-shot examples for a category: security decisions first, then random others, per label.
+    sources="hf" restricts to imported HF rows (eval isolation)."""
     out = []
+    src = "AND source LIKE 'hf:%'" if sources == "hf" else ""
     with connect() as c:
         for label in ("sensitive", "not_sensitive"):
             rows = c.execute(
-                """SELECT text, span, category, label, source FROM dataset
-                   WHERE category=? AND label=?
+                f"""SELECT text, span, category, label, source FROM dataset
+                   WHERE category=? AND label=? {src}
                    ORDER BY (source='security') DESC, CASE WHEN source='security' THEN -created_at ELSE random() END
                    LIMIT ?""",
                 (category, label, k_each),

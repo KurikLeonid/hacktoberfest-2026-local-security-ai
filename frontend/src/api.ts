@@ -27,6 +27,14 @@ export type DlpEvent = {
   error: string | null
   latency_ms: number | null
   decided_at: number | null
+  purpose: Purpose | null
+}
+
+export type Purpose = { work: boolean; topic: string; confidence: number }
+
+export type PurposeStats = {
+  domains: { host: string; total: number; non_work: number }[]
+  topics: { topic: string; n: number }[]
 }
 
 export type PolicyRaw = {
@@ -81,6 +89,7 @@ export const api = {
       '/api/classify',
       json('POST', { text, host }),
     ),
+  stats: (hours = 24) => req<PurposeStats>(`/api/stats?hours=${hours}`),
   policies: () =>
     req<{ raw: PolicyRaw; yaml: string; runtime: { provider: string; model: string; local: boolean } }>('/api/policies'),
   savePolicies: (raw: PolicyRaw) => req<{ restart_proxy: boolean }>('/api/policies', json('PUT', raw)),

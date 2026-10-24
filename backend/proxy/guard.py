@@ -67,13 +67,14 @@ class Guard:
             res = await classifier.classify(text, host, pol)
             error = None
         except classifier.ClassifierError as e:
-            res = {"tier": "BLOCK", "score": 1.0, "findings": [], "latency_ms": None}
+            res = {"tier": "BLOCK", "score": 1.0, "findings": [], "purpose": None, "latency_ms": None}
             error = str(e)
         tier = res["tier"]
         status = {"ALLOW": "allowed", "REVIEW": "pending", "BLOCK": "blocked"}[tier]
         event = store.insert_event(
             host=host, path=req.path, adapter=adapter, text=text[: classifier.MAX_CHARS], tier=tier,
             score=res["score"], findings=res["findings"], status=status, error=error, latency_ms=res["latency_ms"],
+            purpose=res["purpose"],
         )
         log.info(f"[{tier}] {host}{req.path[:60]} score={res['score']} {res['latency_ms'] or '-'}ms {error or ''}")
         if tier == "ALLOW":

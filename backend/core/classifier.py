@@ -41,12 +41,17 @@ def runtime_model(pol: "policies.Policies") -> dict:
     return {"provider": "ollama", "model": pol.llm, "local": True}
 
 CATEGORY_HELP = {
-    "pii": "personal data of a real person: full names with contact info, emails, phone numbers, home addresses, passport/SSN/ID numbers, dates of birth",
+    "pii": "personal data of a real person: full names with contact info, emails (including work emails like name.surname@company.com), phone numbers, home addresses, passport/SSN/ID numbers, dates of birth, age, salary of a named person",
+    "special_pii": "GDPR Art. 9/10 special category data about an identifiable person: health, diagnoses, disability, pregnancy, "
+    "body weight, biometrics, genetic data, racial or ethnic origin, religion, political opinions, trade union membership, "
+    "sex life or sexual orientation, criminal convictions. Counts even without a name if the person can be singled out "
+    "indirectly (e.g. 'our only accountant in the Berlin office has depression')",
     "credentials": "secrets that grant access: API keys, tokens, passwords, private keys, connection strings with passwords",
     "financial": "card numbers, bank accounts, IBANs, salaries, non-public revenue or financial figures",
     "customer_data": "data about the company's customers: customer lists, contracts, support tickets, usage data tied to a customer",
     "source_code": "proprietary source code, configs, internal API schemas",
-    "internal_docs": "internal non-public documents: strategy, roadmaps, incident reports, internal meeting notes",
+    "internal_docs": "internal non-public information: strategy, roadmaps, incident reports, internal meeting notes, "
+    "unannounced deals, M&A or acquisition talks, project codenames, anything described as confidential or known only to executives",
 }
 
 
@@ -68,10 +73,24 @@ DETECT_SCHEMA = {
                 },
                 "required": ["span", "category", "reason"],
             },
-        }
+        },
+        "purpose": {
+            "type": "object",
+            "properties": {
+                "work": {"type": "boolean"},
+                "topic": {"type": "string"},
+                "confidence": {"type": "number"},
+            },
+            "required": ["work", "topic", "confidence"],
+        },
     },
-    "required": ["findings"],
+    "required": ["findings", "purpose"],
 }
+
+DEFAULT_PURPOSE = (
+    "Work-related: tasks for the company, professional learning and skills, work correspondence, HR questions. "
+    "Non-work: household, hobbies, entertainment, personal finances, children's homework, personal travel."
+)
 
 VERIFY_SCHEMA = {
     "type": "object",
@@ -94,26 +113,54 @@ VERIFY_SCHEMA = {
 }
 
 
+# Some Ollama runners (e.g. the MLX build of gemma4 on Apple Silicon) reject `format`; then we put the schema
+# into the prompt and parse JSON out of plain text. Detected once per process.
+_ollama_structured = True
+
+
+def _extract_json(text: str) -> dict:
+    text = text.strip()
+    if text.startswith("```"):
+        text = text.split("\n", 1)[1] if "\n" in text else text
+        text = text.rsplit("```", 1)[0]
+    start, end = text.find("{"), text.rfind("}")
+    if start < 0 or end < start:
+        raise ValueError("no JSON object in model output")
+    return json.loads(text[start : end + 1])
+
+
 async def _chat(client: httpx.AsyncClient, model: str, system: str, user: str, schema: dict) -> dict:
+    global _ollama_structured
     if PROVIDER == "gemini":
         return await _chat_gemini(client, system, user, schema)
-    r = await client.post(
-        f"{OLLAMA}/api/chat",
-        json={
-            "model": model,
-            "messages": [{"role": "system", "content": system}, {"role": "user", "content": user}],
-            "format": schema,
-            "stream": False,
-            "think": False,
-            "keep_alive": "30m",
-            "options": {"temperature": 0},
-        },
+    body = {
+        "model": model,
+        "messages": [{"role": "system", "content": system}, {"role": "user", "content": user}],
+        "stream": False,
+        "think": False,
+        "keep_alive": "30m",
+        "options": {"temperature": 0},
+    }
+    if _ollama_structured:
+        r = await client.post(f"{OLLAMA}/api/chat", json={**body, "format": schema})
+        if r.status_code == 501 and "structured output" in r.text:
+            _ollama_structured = False
+        else:
+            return _parse_ollama(r, structured=True)
+    body["messages"][0]["content"] = (
+        system + "\n\nRespond with ONLY one JSON object (no prose, no code fences) matching this JSON schema:\n"
+        + json.dumps(schema)
     )
+    return _parse_ollama(await client.post(f"{OLLAMA}/api/chat", json=body), structured=False)
+
+
+def _parse_ollama(r: httpx.Response, structured: bool) -> dict:
     if r.status_code != 200:
         raise ClassifierError(f"ollama {r.status_code}: {r.text[:200]}")
     try:
-        return json.loads(r.json()["message"]["content"])
-    except (KeyError, json.JSONDecodeError) as e:
+        content = r.json()["message"]["content"]
+        return json.loads(content) if structured else _extract_json(content)
+    except (KeyError, ValueError) as e:
         raise ClassifierError(f"bad model output: {e}") from e
 
 
@@ -143,26 +190,38 @@ def _categories_block(cats: list[str]) -> str:
     return "\n".join(f"- {c}: {CATEGORY_HELP.get(c, c)}" for c in cats)
 
 
-async def detect(client, model, text: str, cats: list[str]) -> list[dict]:
+async def detect(client, model, text: str, cats: list[str], purpose_rule: str) -> tuple[list[dict], dict]:
+    """Returns (findings, purpose). Purpose (work / non-work) is judged in the same call to avoid extra latency."""
     system = (
         "You are a data loss prevention detector. Find every fragment of the user's outgoing message "
         "that contains sensitive data. Categories:\n" + _categories_block(cats) + "\n"
         "Rules: copy each span EXACTLY as it appears in the message (short, only the sensitive part). "
-        "Ignore obviously fake placeholders like 'your-api-key', 'xxx', 'example.com' and generic questions. "
-        "If nothing is sensitive return an empty list."
+        "Data may be obfuscated (spelled out, split with dashes or spaces, 'name dot surname at company dot com', "
+        "transliterated, inside tables/JSON or buried in long text): still report it. "
+        "Ignore obviously fake placeholders like 'your-api-key', 'xxx', 'example.com', well-known test card numbers "
+        "(e.g. 4242 4242 4242 4242), fictional characters, historical figures and facts already public "
+        "(published financial reports, press releases). If nothing is sensitive return an empty list.\n\n"
+        "Also classify the purpose of the whole message for a company laptop. " + purpose_rule + " "
+        "Give a short topic (2-4 words, in English) and confidence 0..1 in your work/non-work judgement."
     )
     out = await _chat(client, model, system, f"MESSAGE:\n{text}", DETECT_SCHEMA)
     findings = []
     for f in out.get("findings", []):
         if f.get("category") in cats and f.get("span"):
             findings.append({"span": f["span"], "category": f["category"], "reason": f.get("reason", "")})
-    return findings
+    p = out.get("purpose") or {}
+    purpose = {
+        "work": bool(p.get("work", True)),
+        "topic": str(p.get("topic", ""))[:60],
+        "confidence": max(0.0, min(1.0, float(p.get("confidence", 0.5) or 0.5))),
+    }
+    return findings, purpose
 
 
-async def verify(client, model, text: str, findings: list[dict], host: str) -> list[dict]:
+async def verify(client, model, text: str, findings: list[dict], host: str, sources: str = "all") -> list[dict]:
     blocks = []
     for cat in sorted({f["category"] for f in findings}):
-        ex = store.examples_for(cat)
+        ex = store.examples_for(cat, sources=sources)
         lines = [
             f'  [{e["label"]}] "{(e["span"] or e["text"])[:200]}"' + (f' (context: "{e["text"][:160]}")' if e["span"] else "")
             for e in ex
@@ -176,7 +235,11 @@ async def verify(client, model, text: str, findings: list[dict], host: str) -> l
         "(examples labelled not_sensitive show look-alikes that are safe). Give confidence 0..1 that the "
         "finding is truly sensitive data that must not leave the company. Calibrate:\n"
         "- 0.9-1.0: unambiguous and directly harmful: real secrets/keys/passwords, card or account numbers, "
-        "government IDs, a real person's contact details together with their name.\n"
+        "government IDs, a real person's contact details together with their name (a work email like "
+        "name.surname@company.com already contains the name), any GDPR special category data (special_pii: health, "
+        "weight, pregnancy, religion, ethnicity, sexual orientation, union membership, politics, criminal records) "
+        "about an identifiable person, salary of a named person. The author's own name, work email or phone (e.g. "
+        "in an email signature) is employee personal data too: do NOT lower confidence because it belongs to the sender.\n"
         "- 0.5-0.85: probably sensitive but needs a human: company source code, internal documents, customer "
         "names without identifiers, business logic. A person must judge context.\n"
         "- below 0.5: placeholders, public/generic code, well-known facts, data that only looks sensitive.\n\n"
@@ -206,8 +269,11 @@ def _locate(text: str, findings: list[dict]):
         f["start"], f["end"] = (i, i + len(f["span"])) if i >= 0 else (None, None)
 
 
-async def classify(text: str, host: str, pol: policies.Policies | None = None) -> dict:
-    """Returns {tier, score, findings, latency_ms}. Raises ClassifierError on model failure/timeout."""
+async def classify(text: str, host: str, pol: policies.Policies | None = None, examples: str = "all") -> dict:
+    """Returns {tier, score, findings, purpose, latency_ms}. Raises ClassifierError on model failure/timeout.
+
+    examples: "all" uses every dataset row as few-shot, "hf" only imported HF rows (used by eval to stay isolated
+    from security decisions)."""
     pol = pol or policies.load()
     text = text[:MAX_CHARS]
     t0 = time.monotonic()
@@ -215,17 +281,17 @@ async def classify(text: str, host: str, pol: policies.Policies | None = None) -
     async def run():
         # trust_env=False: never route model calls through the (system) proxy we are part of
         async with httpx.AsyncClient(timeout=pol.model_timeout_s, trust_env=False) as client:
-            findings = await detect(client, pol.llm, text, pol.categories)
+            findings, purpose = await detect(client, pol.llm, text, pol.categories, pol.purpose_rule or DEFAULT_PURPOSE)
             allowed = pol.allowed_categories(host)
             for f in findings:
                 f["allowed"] = f["category"] in allowed
             violations = [f for f in findings if not f["allowed"]]
             if violations:
-                await verify(client, pol.llm, text, violations, host)
-            return findings
+                await verify(client, pol.llm, text, violations, host, examples)
+            return findings, purpose
 
     try:
-        findings = await asyncio.wait_for(run(), timeout=pol.model_timeout_s)
+        findings, purpose = await asyncio.wait_for(run(), timeout=pol.model_timeout_s)
     except asyncio.TimeoutError as e:
         raise ClassifierError(f"model timeout > {pol.model_timeout_s}s") from e
     except httpx.HTTPError as e:
@@ -237,6 +303,7 @@ async def classify(text: str, host: str, pol: policies.Policies | None = None) -
         "tier": pol.tier(score),
         "score": round(score, 3),
         "findings": findings,
+        "purpose": purpose,
         "latency_ms": int((time.monotonic() - t0) * 1000),
     }
 

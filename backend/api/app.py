@@ -2,6 +2,7 @@
 
 import asyncio
 import json
+import time
 from pathlib import Path
 
 import yaml
@@ -96,6 +97,11 @@ def decide(event_id: str, d: Decision):
     ev = store.get_event(event_id)
     broadcast("event", ev)
     return {"event": ev, "dataset_rows_added": added}
+
+
+@app.get("/api/stats")
+def stats(hours: int = 24):
+    return store.purpose_stats(time.time() - hours * 3600)
 
 
 # --- try-it: classify without the proxy (used by the admin UI and demo) -------------
