@@ -2,6 +2,7 @@
 
 import shutil
 import subprocess
+import threading
 
 import httpx
 
@@ -14,13 +15,19 @@ def mask(span: str) -> str:
     return span[:4] + "•" * min(8, max(3, len(span) - 4)) if len(span) > 4 else "•••"
 
 
-def macos(title: str, message: str):
+def _send(title: str, message: str):
+    # terminal-notifier opens the dashboard on click, but newer macOS may deny it permission: fall back to osascript
     if shutil.which("terminal-notifier"):
         cmd = ["terminal-notifier", "-title", title, "-message", message, "-open", DASHBOARD, "-sound", "Basso"]
-    else:
-        esc = lambda s: s.replace("\\", "\\\\").replace('"', '\\"')
-        cmd = ["osascript", "-e", f'display notification "{esc(message)}" with title "{esc(title)}" sound name "Basso"']
-    subprocess.Popen(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        if subprocess.run(cmd, capture_output=True, timeout=5).returncode == 0:
+            return
+    esc = lambda s: s.replace("\\", "\\\\").replace('"', '\\"')
+    script = f'display notification "{esc(message)}" with title "{esc(title)}" sound name "Basso"'
+    subprocess.run(["osascript", "-e", script], capture_output=True, timeout=5)
+
+
+def macos(title: str, message: str):
+    threading.Thread(target=_send, args=(title, message), daemon=True).start()
 
 
 def describe(event: dict) -> str:
