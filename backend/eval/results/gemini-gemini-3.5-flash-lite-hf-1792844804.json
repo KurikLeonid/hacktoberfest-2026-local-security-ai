@@ -876,7 +876,7 @@
    "findings": [
     {
      "category": "pii",
-     "span": "leonid.kurik@semrush.com",
+     "span": "marta.vidal@northwind-labs.com",
      "allowed": false,
      "is_sensitive": true,
      "confidence": 0.95
@@ -907,7 +907,7 @@
    "findings": [
     {
      "category": "pii",
-     "span": "leonid.kurik@semrush.com",
+     "span": "marta.vidal@northwind-labs.com",
      "allowed": false,
      "is_sensitive": true,
      "confidence": 0.95
@@ -938,7 +938,7 @@
    "findings": [
     {
      "category": "pii",
-     "span": "leonid dot kurik at semrush dot com",
+     "span": "marta dot vidal at northwind-labs dot com",
      "allowed": false,
      "is_sensitive": true,
      "confidence": 0.95

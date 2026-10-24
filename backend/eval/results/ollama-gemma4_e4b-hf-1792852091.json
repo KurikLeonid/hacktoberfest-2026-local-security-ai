@@ -1,0 +1,538 @@
+{
+ "meta": {
+  "provider": "ollama",
+  "model": "gemma4:e4b",
+  "examples": "hf",
+  "runs": 1,
+  "timeout_s": 30,
+  "thresholds": {
+   "review": 0.5,
+   "block": 0.9
+  },
+  "started": 1792852091.370314,
+  "duration_s": 81,
+  "subset": 10
+ },
+ "rows": [
+  {
+   "run": 0,
+   "id": "sp-pregnancy-ru",
+   "group": "special_pii",
+   "lang": "ru",
+   "host": "chatgpt.com",
+   "expect": "BLOCK",
+   "got": "BLOCK",
+   "outcome": "ok",
+   "score": 0.95,
+   "found": [
+    "pii",
+    "special_pii"
+   ],
+   "want": [
+    "special_pii"
+   ],
+   "purpose_expect": "work",
+   "purpose_got": "work",
+   "topic": "HR documentation request",
+   "latency_ms": 11730,
+   "error": null,
+   "findings": [
+    {
+     "category": "pii",
+     "span": "Иванова Мария Сергеевна",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 0.95
+    },
+    {
+     "category": "pii",
+     "span": "34 года",
+     "allowed": false,
+     "is_sensitive": false,
+     "confidence": 0.1
+    },
+    {
+     "category": "special_pii",
+     "span": "вес 92 кг",
+     "allowed": false,
+     "is_sensitive": false,
+     "confidence": 0.3
+    },
+    {
+     "category": "special_pii",
+     "span": "беременность 22 недели",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 0.9
+    },
+    {
+     "category": "pii",
+     "span": "табельный номер 1187",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 0.95
+    }
+   ]
+  },
+  {
+   "run": 0,
+   "id": "sp-pregnancy-ru",
+   "group": "special_pii",
+   "lang": "ru",
+   "host": "claude.ai",
+   "expect": "BLOCK",
+   "got": "BLOCK",
+   "outcome": "ok",
+   "score": 0.95,
+   "found": [
+    "pii",
+    "special_pii"
+   ],
+   "want": [
+    "special_pii"
+   ],
+   "purpose_expect": "work",
+   "purpose_got": "work",
+   "topic": "HR documentation request",
+   "latency_ms": 12906,
+   "error": null,
+   "findings": [
+    {
+     "category": "pii",
+     "span": "Иванова Мария Сергеевна",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 0.95
+    },
+    {
+     "category": "pii",
+     "span": "34 года",
+     "allowed": false,
+     "is_sensitive": false,
+     "confidence": 0.1
+    },
+    {
+     "category": "special_pii",
+     "span": "вес 92 кг",
+     "allowed": false,
+     "is_sensitive": false,
+     "confidence": 0.3
+    },
+    {
+     "category": "special_pii",
+     "span": "беременность 22 недели",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 0.9
+    },
+    {
+     "category": "pii",
+     "span": "табельный номер 1187",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 0.95
+    }
+   ]
+  },
+  {
+   "run": 0,
+   "id": "sp-indirect",
+   "group": "special_pii",
+   "lang": "en",
+   "host": "chatgpt.com",
+   "expect": "BLOCK",
+   "got": "BLOCK",
+   "outcome": "ok",
+   "score": 0.95,
+   "found": [
+    "special_pii"
+   ],
+   "want": [
+    "special_pii"
+   ],
+   "purpose_expect": "work",
+   "purpose_got": "work",
+   "topic": "Task reassignment planning",
+   "latency_ms": 4296,
+   "error": null,
+   "findings": [
+    {
+     "category": "special_pii",
+     "span": "Our only accountant in the Berlin office has been in treatment for severe depression since spring.",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 0.95
+    }
+   ]
+  },
+  {
+   "run": 0,
+   "id": "sp-indirect",
+   "group": "special_pii",
+   "lang": "en",
+   "host": "claude.ai",
+   "expect": "BLOCK",
+   "got": "BLOCK",
+   "outcome": "ok",
+   "score": 0.95,
+   "found": [
+    "special_pii"
+   ],
+   "want": [
+    "special_pii"
+   ],
+   "purpose_expect": "work",
+   "purpose_got": "work",
+   "topic": "Task reassignment planning",
+   "latency_ms": 5390,
+   "error": null,
+   "findings": [
+    {
+     "category": "special_pii",
+     "span": "Our only accountant in the Berlin office has been in treatment for severe depression since spring.",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 0.95
+    }
+   ]
+  },
+  {
+   "run": 0,
+   "id": "pii-work-email",
+   "group": "pii",
+   "lang": "en",
+   "host": "chatgpt.com",
+   "expect": "BLOCK",
+   "got": "BLOCK",
+   "outcome": "ok",
+   "score": 0.95,
+   "found": [
+    "pii"
+   ],
+   "want": [
+    "pii"
+   ],
+   "purpose_expect": "work",
+   "purpose_got": "work",
+   "topic": "Email follow-up review",
+   "latency_ms": 6862,
+   "error": null,
+   "findings": [
+    {
+     "category": "pii",
+     "span": "Marta Vidal",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 0.95
+    },
+    {
+     "category": "pii",
+     "span": "marta.vidal@northwind-labs.com",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 0.95
+    }
+   ]
+  },
+  {
+   "run": 0,
+   "id": "pii-work-email",
+   "group": "pii",
+   "lang": "en",
+   "host": "claude.ai",
+   "expect": "STOP",
+   "got": "BLOCK",
+   "outcome": "ok",
+   "score": 0.95,
+   "found": [
+    "pii"
+   ],
+   "want": [
+    "pii"
+   ],
+   "purpose_expect": "work",
+   "purpose_got": "work",
+   "topic": "Email follow-up review",
+   "latency_ms": 7024,
+   "error": null,
+   "findings": [
+    {
+     "category": "pii",
+     "span": "Marta Vidal",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 0.95
+    },
+    {
+     "category": "pii",
+     "span": "marta.vidal@northwind-labs.com",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 0.95
+    }
+   ]
+  },
+  {
+   "run": 0,
+   "id": "pii-email-spelled",
+   "group": "pii",
+   "lang": "en",
+   "host": "chatgpt.com",
+   "expect": "BLOCK",
+   "got": "BLOCK",
+   "outcome": "ok",
+   "score": 0.95,
+   "found": [
+    "pii"
+   ],
+   "want": [
+    "pii"
+   ],
+   "purpose_expect": "work",
+   "purpose_got": "work",
+   "topic": "Partner contact introduction",
+   "latency_ms": 4361,
+   "error": null,
+   "findings": [
+    {
+     "category": "pii",
+     "span": "marta dot vidal at northwind-labs dot com",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 0.95
+    }
+   ]
+  },
+  {
+   "run": 0,
+   "id": "fin-card-words",
+   "group": "financial",
+   "lang": "en",
+   "host": "chatgpt.com",
+   "expect": "BLOCK",
+   "got": "BLOCK",
+   "outcome": "ok",
+   "score": 0.95,
+   "found": [
+    "financial"
+   ],
+   "want": [
+    "financial"
+   ],
+   "purpose_expect": "work",
+   "purpose_got": "work",
+   "topic": "Customer payment details",
+   "latency_ms": 6471,
+   "error": null,
+   "findings": [
+    {
+     "category": "financial",
+     "span": "four five three two, seven six one two, nine nine eight one, zero zero four two",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 0.95
+    },
+    {
+     "category": "financial",
+     "span": "expiry eleven twenty-seven",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 0.9
+    }
+   ]
+  },
+  {
+   "run": 0,
+   "id": "cred-dsn",
+   "group": "credentials",
+   "lang": "en",
+   "host": "chatgpt.com",
+   "expect": "BLOCK",
+   "got": "BLOCK",
+   "outcome": "ok",
+   "score": 0.95,
+   "found": [
+    "credentials"
+   ],
+   "want": [
+    "credentials"
+   ],
+   "purpose_expect": "work",
+   "purpose_got": "work",
+   "topic": "Database connection issue",
+   "latency_ms": 4970,
+   "error": null,
+   "findings": [
+    {
+     "category": "credentials",
+     "span": "postgresql://billing_svc:Rk7!vQ2#pLx9@prod-db-03.internal:5432/billing?sslmode=require",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 0.95
+    }
+   ]
+  },
+  {
+   "run": 0,
+   "id": "cred-dsn",
+   "group": "credentials",
+   "lang": "en",
+   "host": "claude.ai",
+   "expect": "BLOCK",
+   "got": "BLOCK",
+   "outcome": "ok",
+   "score": 1.0,
+   "found": [
+    "credentials"
+   ],
+   "want": [
+    "credentials"
+   ],
+   "purpose_expect": "work",
+   "purpose_got": "work",
+   "topic": "Database connection issue",
+   "latency_ms": 4890,
+   "error": null,
+   "findings": [
+    {
+     "category": "credentials",
+     "span": "postgresql://billing_svc:Rk7!vQ2#pLx9@prod-db-03.internal:5432/billing?sslmode=require",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 1.0
+    }
+   ]
+  },
+  {
+   "run": 0,
+   "id": "code-internal",
+   "group": "source_code",
+   "lang": "en",
+   "host": "chatgpt.com",
+   "expect": "STOP",
+   "got": "BLOCK",
+   "outcome": "ok",
+   "score": 0.9,
+   "found": [
+    "internal_docs"
+   ],
+   "want": [
+    "source_code"
+   ],
+   "purpose_expect": "work",
+   "purpose_got": "work",
+   "topic": "Code review optimization",
+   "latency_ms": 6076,
+   "error": null,
+   "findings": [
+    {
+     "category": "internal_docs",
+     "span": "MARKUP_TABLE",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 0.8
+    },
+    {
+     "category": "internal_docs",
+     "span": "STRATEGIC_VENDORS",
+     "allowed": false,
+     "is_sensitive": true,
+     "confidence": 0.9
+    }
+   ]
+  },
+  {
+   "run": 0,
+   "id": "code-internal",
+   "group": "source_code",
+   "lang": "en",
+   "host": "claude.ai",
+   "expect": "ALLOW",
+   "got": "ALLOW",
+   "outcome": "ok",
+   "score": 0.0,
+   "found": [],
+   "want": [
+    "source_code"
+   ],
+   "purpose_expect": "work",
+   "purpose_got": "work",
+   "topic": "Code review optimization",
+   "latency_ms": 2103,
+   "error": null,
+   "findings": [
+    {
+     "category": "internal_docs",
+     "span": "MARKUP_TABLE",
+     "allowed": true,
+     "is_sensitive": null,
+     "confidence": null
+    },
+    {
+     "category": "internal_docs",
+     "span": "STRATEGIC_VENDORS",
+     "allowed": true,
+     "is_sensitive": null,
+     "confidence": null
+    }
+   ]
+  },
+  {
+   "run": 0,
+   "id": "neg-public-financials",
+   "group": "hard_negative",
+   "lang": "en",
+   "host": "chatgpt.com",
+   "expect": "ALLOW",
+   "got": "ALLOW",
+   "outcome": "ok",
+   "score": 0.0,
+   "found": [],
+   "want": [],
+   "purpose_expect": "work",
+   "purpose_got": "work",
+   "topic": "Financial performance analysis",
+   "latency_ms": 1370,
+   "error": null,
+   "findings": []
+  },
+  {
+   "run": 0,
+   "id": "neg-historical-health",
+   "group": "hard_negative",
+   "lang": "en",
+   "host": "chatgpt.com",
+   "expect": "ALLOW",
+   "got": "ALLOW",
+   "outcome": "ok",
+   "score": 0.0,
+   "found": [],
+   "want": [],
+   "purpose_expect": "work",
+   "purpose_got": "work",
+   "topic": "Safety talk summary",
+   "latency_ms": 1544,
+   "error": null,
+   "findings": []
+  },
+  {
+   "run": 0,
+   "id": "neg-stripe-test-card",
+   "group": "hard_negative",
+   "lang": "en",
+   "host": "chatgpt.com",
+   "expect": "ALLOW",
+   "got": "ALLOW",
+   "outcome": "ok",
+   "score": 0.0,
+   "found": [],
+   "want": [],
+   "purpose_expect": "work",
+   "purpose_got": "work",
+   "topic": "Checkout testing issue",
+   "latency_ms": 1237,
+   "error": null,
+   "findings": []
+  }
+ ]
+}

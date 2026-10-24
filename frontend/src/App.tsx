@@ -71,7 +71,7 @@ export default function App() {
             <span className="font-semibold">Local DLP Guard</span>
             {runtime && !runtime.local ? (
               <span className="rounded bg-rose-600 px-2 py-0.5 text-xs font-semibold text-white">
-                ⚠ облачная модель {runtime.model}: только для разработки
+                ⚠ {runtime.model} через Gemini API: проверяемый текст уходит в Google
               </span>
             ) : (
               <span className="text-xs text-slate-500">{runtime?.model ?? '…'} · Ollama · всё локально</span>
