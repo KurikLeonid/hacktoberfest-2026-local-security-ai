@@ -1,0 +1,45 @@
+# Local DLP Guard policies. Hot-reloaded by the proxy and API on file change.
+
+categories:
+  - pii
+  - credentials
+  - financial
+  - customer_data
+  - source_code
+  - internal_docs
+
+# Categories that may never leave the laptop, regardless of domain whitelist.
+never_allowed:
+  - credentials
+
+thresholds:
+  review: 0.5   # score >= review -> REVIEW
+  block: 0.85   # score >= block  -> BLOCK
+
+review_timeout_s: 60
+model_timeout_s: 15
+
+models:
+  llm: gemma4:e4b
+  fallback: gemma4:e2b
+
+# TLS is decrypted only for these hosts (and their subdomains). Restart proxy after change.
+inspect_domains:
+  - chatgpt.com
+  - claude.ai
+
+# Whitelist: domain -> categories allowed to be sent there. Domains not listed allow nothing.
+domains:
+  claude.ai: [source_code, internal_docs]
+  chatgpt.com: []
+
+# Request paths that are never inspected (telemetry, static).
+skip_paths:
+  - "/ces/"
+  - "/v1/rgstr"
+  - "/sentinel/"
+  - "/api/event_logging"
+  - "/statsig"
+  - "\\.(js|css|png|svg|woff2?|ico)$"
+
+min_text_chars: 12
