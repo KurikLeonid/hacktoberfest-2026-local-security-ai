@@ -46,6 +46,7 @@ class Guard:
         # decrypt TLS only for inspected domains, everything else is passed through untouched
         ctx.options.update(allow_hosts=allow_hosts_regex(pol.inspect_domains))
         log.info(f"DLP guard running, inspecting {pol.inspect_domains}, model {pol.llm}")
+        asyncio.get_running_loop().create_task(classifier.warmup(pol))
 
     async def request(self, flow: http.HTTPFlow):
         req = flow.request

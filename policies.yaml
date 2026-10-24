@@ -19,7 +19,7 @@ thresholds:
   block: 0.9    # score >= block  -> BLOCK (matches verifier scale: 0.9+ = unambiguous harm)
 
 review_timeout_s: 60
-model_timeout_s: 15
+model_timeout_s: 25
 
 models:
   llm: gemma4:e4b

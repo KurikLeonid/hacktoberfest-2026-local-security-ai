@@ -33,6 +33,12 @@ OLLAMA = os.environ.get("OLLAMA_HOST", "http://127.0.0.1:11434")
 PROVIDER = os.environ.get("DLP_LLM_PROVIDER", "ollama")
 GEMINI_MODEL = os.environ.get("GEMINI_MODEL", "gemini-3.8-flash")
 MAX_CHARS = 4000
+# Latency budget for small local models: the verifier only re-judges a few findings (score is the max anyway),
+# with short reasons and capped output.
+MAX_VERIFY_PER_CATEGORY = 2
+MAX_VERIFY = 4
+EXAMPLES_PER_LABEL = 2
+NUM_PREDICT = 512
 
 
 def runtime_model(pol: "policies.Policies") -> dict:
@@ -139,7 +145,7 @@ async def _chat(client: httpx.AsyncClient, model: str, system: str, user: str, s
         "stream": False,
         "think": False,
         "keep_alive": "30m",
-        "options": {"temperature": 0},
+        "options": {"temperature": 0, "num_predict": NUM_PREDICT},
     }
     if _ollama_structured:
         r = await client.post(f"{OLLAMA}/api/chat", json={**body, "format": schema})
@@ -165,24 +171,33 @@ def _parse_ollama(r: httpx.Response, structured: bool) -> dict:
 
 
 async def _chat_gemini(client: httpx.AsyncClient, system: str, user: str, schema: dict) -> dict:
-    r = await client.post(
-        f"https://generativelanguage.googleapis.com/v1beta/models/{GEMINI_MODEL}:generateContent",
-        headers={"x-goog-api-key": os.environ.get("GEMINI_API_KEY", "")},
-        json={
-            "systemInstruction": {"parts": [{"text": system}]},
-            "contents": [{"role": "user", "parts": [{"text": user}]}],
-            "generationConfig": {
-                "temperature": 0,
-                "responseMimeType": "application/json",
-                "responseJsonSchema": schema,
+    async def call(structured: bool) -> httpx.Response:
+        config = {"temperature": 0}
+        sys_text = system
+        if structured:
+            config.update(responseMimeType="application/json", responseJsonSchema=schema)
+        else:
+            sys_text += "\n\nRespond with ONLY one JSON object (no prose, no code fences) matching this JSON schema:\n" + json.dumps(schema)
+        return await client.post(
+            f"https://generativelanguage.googleapis.com/v1beta/models/{GEMINI_MODEL}:generateContent",
+            headers={"x-goog-api-key": os.environ.get("GEMINI_API_KEY", "")},
+            json={
+                "systemInstruction": {"parts": [{"text": sys_text}]},
+                "contents": [{"role": "user", "parts": [{"text": user}]}],
+                "generationConfig": config,
             },
-        },
-    )
+        )
+
+    r = await call(structured=True)
+    if r.status_code == 500:  # Gemma models on this API sometimes fail on nested schemas: schema in the prompt instead
+        r = await call(structured=False)
     if r.status_code != 200:
         raise ClassifierError(f"gemini {r.status_code}: {r.text[:200]}")
     try:
-        return json.loads(r.json()["candidates"][0]["content"]["parts"][0]["text"])
-    except (KeyError, IndexError, json.JSONDecodeError) as e:
+        # Gemma models on this API may prepend "thinking" parts; the answer is the last non-thought part
+        parts = [x for x in r.json()["candidates"][0]["content"]["parts"] if not x.get("thought") and x.get("text")]
+        return _extract_json(parts[-1]["text"])
+    except (KeyError, IndexError, ValueError) as e:
         raise ClassifierError(f"bad model output: {e}") from e
 
 
@@ -202,7 +217,8 @@ async def detect(client, model, text: str, cats: list[str], purpose_rule: str) -
         "(e.g. 4242 4242 4242 4242), fictional characters, historical figures and facts already public "
         "(published financial reports, press releases). If nothing is sensitive return an empty list.\n\n"
         "Also classify the purpose of the whole message for a company laptop. " + purpose_rule + " "
-        "Give a short topic (2-4 words, in English) and confidence 0..1 in your work/non-work judgement."
+        "Give a short topic (2-4 words, in English) and confidence 0..1 in your work/non-work judgement. "
+        "Keep every reason under 12 words."
     )
     out = await _chat(client, model, system, f"MESSAGE:\n{text}", DETECT_SCHEMA)
     findings = []
@@ -221,9 +237,9 @@ async def detect(client, model, text: str, cats: list[str], purpose_rule: str) -
 async def verify(client, model, text: str, findings: list[dict], host: str, sources: str = "all") -> list[dict]:
     blocks = []
     for cat in sorted({f["category"] for f in findings}):
-        ex = store.examples_for(cat, sources=sources)
+        ex = store.examples_for(cat, k_each=EXAMPLES_PER_LABEL, sources=sources)
         lines = [
-            f'  [{e["label"]}] "{(e["span"] or e["text"])[:200]}"' + (f' (context: "{e["text"][:160]}")' if e["span"] else "")
+            f'  [{e["label"]}] "{(e["span"] or e["text"])[:120]}"' + (f' (context: "{e["text"][:100]}")' if e["span"] else "")
             for e in ex
         ]
         blocks.append(f"Category {cat}: {CATEGORY_HELP.get(cat, cat)}\nLabelled examples:\n" + ("\n".join(lines) or "  (none)"))
@@ -233,7 +249,7 @@ async def verify(client, model, text: str, findings: list[dict], host: str, sour
         f"that a user is about to send to {host}, which is NOT allowed to receive these categories. "
         "For each finding decide whether it is really sensitive, using the labelled examples to calibrate "
         "(examples labelled not_sensitive show look-alikes that are safe). Give confidence 0..1 that the "
-        "finding is truly sensitive data that must not leave the company. Calibrate:\n"
+        "finding is truly sensitive data that must not leave the company. Keep each reason under 12 words. Calibrate:\n"
         "- 0.9-1.0: unambiguous and directly harmful: real secrets/keys/passwords, card or account numbers, "
         "government IDs, a real person's contact details together with their name (a work email like "
         "name.surname@company.com already contains the name), any GDPR special category data (special_pii: health, "
@@ -259,6 +275,24 @@ async def verify(client, model, text: str, findings: list[dict], host: str, sour
                 verify_reason=v.get("reason", ""),
             )
     return findings
+
+
+def _pick_for_verify(violations: list[dict]) -> list[dict]:
+    picked, per_cat = [], {}
+    for f in violations:
+        if per_cat.get(f["category"], 0) < MAX_VERIFY_PER_CATEGORY and len(picked) < MAX_VERIFY:
+            picked.append(f)
+            per_cat[f["category"]] = per_cat.get(f["category"], 0) + 1
+    return picked
+
+
+async def warmup(pol: policies.Policies | None = None):
+    """Load the local model into memory so the first real request does not pay the load time."""
+    pol = pol or policies.load()
+    try:
+        await classify("warm up", "warmup.local", pol)
+    except ClassifierError:
+        pass
 
 
 def _locate(text: str, findings: list[dict]):
@@ -287,7 +321,14 @@ async def classify(text: str, host: str, pol: policies.Policies | None = None, e
                 f["allowed"] = f["category"] in allowed
             violations = [f for f in findings if not f["allowed"]]
             if violations:
-                await verify(client, pol.llm, text, violations, host, examples)
+                await verify(client, pol.llm, text, _pick_for_verify(violations), host, examples)
+                for f in violations:  # findings not sent to the verifier inherit their category's verdict
+                    if "is_sensitive" not in f:
+                        peers = [v for v in violations if v["category"] == f["category"] and "is_sensitive" in v]
+                        best = max(peers, key=lambda v: v["confidence"], default=None)
+                        f.update(is_sensitive=best["is_sensitive"] if best else True,
+                                 confidence=best["confidence"] if best else 0.6,
+                                 verify_reason="same category as verified finding")
             return findings, purpose
 
     try:
