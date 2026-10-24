@@ -76,7 +76,7 @@ def parse(raw: dict) -> Policies:
         review=review,
         block=block,
         review_timeout_s=int(raw.get("review_timeout_s", 60)),
-        model_timeout_s=int(raw.get("model_timeout_s", 15)),
+        model_timeout_s=int(raw.get("model_timeout_s", 30)),
         llm=models.get("llm", "gemma4:e4b"),
         fallback=models.get("fallback", "gemma4:e2b"),
         inspect_domains=raw.get("inspect_domains") or [],

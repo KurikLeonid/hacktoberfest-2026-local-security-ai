@@ -27,12 +27,12 @@ React SPA: Queue | Log | Policies | Dataset
 2. **Policy filter**: убираем находки, чья категория разрешена домену. Домен вне whitelist означает, что ничего не разрешено, а `credentials` не разрешены никуда. Если ничего не осталось, ALLOW.
 3. **Verify**: для каждой оставшейся категории берём из датасета примеры этой категории: ~3 positive и ~3 negative/hard negative, решения security в приоритете. Gemma переоценивает каждую находку и возвращает `{finding_id, is_sensitive, confidence, reason}`.
 4. **Score** = максимальный confidence среди подтверждённых нарушений. Если score < `review` (0.5), ALLOW. Если score ≥ `block` (0.85), BLOCK. Между ними REVIEW.
-5. Ошибка Ollama, битый JSON или ответ дольше 15 с → BLOCK (fail-closed).
+5. Ошибка Ollama, битый JSON или ответ дольше 30 с → BLOCK (fail-closed).
 6. Найденные span'ы сохраняются вместе с событием. Админка подсвечивает их в тексте и показывает категорию и причину. Уведомление показывает категорию и замаскированный фрагмент.
 
 ## Политики (policies.yaml, hot reload по mtime)
 - `categories`: pii, credentials, financial, customer_data, source_code, internal_docs
-- `thresholds`: {review: 0.5, block: 0.85}; `review_timeout_s: 60`; `model_timeout_s: 15`
+- `thresholds`: {review: 0.5, block: 0.85}; `review_timeout_s: 60`; `model_timeout_s: 30`
 - `models`: {llm: gemma4 E4B (фолбэк E2B), точный тег проверяем при `ollama pull`}
 - `inspect_domains`: chatgpt.com, claude.ai (+ домены для generic). Из них строится `allow_hosts` mitmproxy; после изменения нужен рестарт прокси, и админка об этом предупреждает.
 - `domains`: claude.ai → [source_code, internal_docs]; chatgpt.com → [] (вне whitelist)
