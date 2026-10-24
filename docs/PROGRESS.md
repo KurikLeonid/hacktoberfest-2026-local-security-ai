@@ -69,3 +69,4 @@
 - REVIEW → Reject: клиент получает 403 «rejected by security», в датасет добавляется строка `sensitive / security`.
 - BLOCK (ключи в claude.ai): 403 за ~5 с, сообщение с маской `AKIA••••••••`, уведомление macOS.
 - Fail-closed без модели: 403 (проверено в M2).
+- REVIEW без решения: через 60 с статус `expired`, клиент получает 403 «no security decision in time» (запрос висел 65 с).
