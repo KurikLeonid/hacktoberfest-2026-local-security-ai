@@ -7,3 +7,4 @@ data/*.db
 data/*.db-*
 data/hf_cache/
 .DS_Store
+data/*.log
