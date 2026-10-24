@@ -113,8 +113,8 @@ VERIFY_SCHEMA = {
 }
 
 
-# Some Ollama runners (e.g. the MLX build of gemma4 on Apple Silicon) reject `format`; then we put the schema
-# into the prompt and parse JSON out of plain text. Detected once per process.
+# Some Ollama runners reject `format`; then we put the schema into the prompt and parse JSON out of plain text.
+# Gemma 4 on MLX can accept `format` but loop while generating, so always use the plain JSON path for it.
 _ollama_structured = True
 
 
@@ -129,7 +129,7 @@ def _extract_json(text: str) -> dict:
     return json.loads(text[start : end + 1])
 
 
-async def _chat(client: httpx.AsyncClient, model: str, system: str, user: str, schema: dict) -> dict:
+async def _chat(client: httpx.AsyncClient, model: str, system: str, user: str, schema: dict, stage: str) -> dict:
     global _ollama_structured
     if PROVIDER == "gemini":
         return await _chat_gemini(client, system, user, schema)
@@ -141,27 +141,36 @@ async def _chat(client: httpx.AsyncClient, model: str, system: str, user: str, s
         "keep_alive": "30m",
         "options": {"temperature": 0},
     }
-    if _ollama_structured:
+    if _ollama_structured and not model.startswith("gemma4:"):
         r = await client.post(f"{OLLAMA}/api/chat", json={**body, "format": schema})
         if r.status_code == 501 and "structured output" in r.text:
             _ollama_structured = False
         else:
-            return _parse_ollama(r, structured=True)
+            return _parse_ollama(r, structured=True, stage=stage)
     body["messages"][0]["content"] = (
         system + "\n\nRespond with ONLY one JSON object (no prose, no code fences) matching this JSON schema:\n"
         + json.dumps(schema)
     )
-    return _parse_ollama(await client.post(f"{OLLAMA}/api/chat", json=body), structured=False)
+    return _parse_ollama(await client.post(f"{OLLAMA}/api/chat", json=body), structured=False, stage=stage)
 
 
-def _parse_ollama(r: httpx.Response, structured: bool) -> dict:
+def _parse_ollama(r: httpx.Response, structured: bool, stage: str) -> dict:
     if r.status_code != 200:
         raise ClassifierError(f"ollama {r.status_code}: {r.text[:200]}")
+    payload, content = {}, ""
     try:
-        content = r.json()["message"]["content"]
-        return json.loads(content) if structured else _extract_json(content)
-    except (KeyError, ValueError) as e:
-        raise ClassifierError(f"bad model output: {e}") from e
+        payload = r.json()
+        content = payload["message"]["content"]
+        result = json.loads(content) if structured else _extract_json(content)
+        if not isinstance(result, dict):
+            raise ValueError("expected JSON object")
+        return result
+    except (KeyError, TypeError, ValueError) as e:
+        done_reason = payload.get("done_reason", "unknown") if isinstance(payload, dict) else "unknown"
+        response_chars = len(content) if isinstance(content, str) else 0
+        raise ClassifierError(
+            f"bad model output: stage={stage} done_reason={done_reason} response_chars={response_chars}: {e}"
+        ) from e
 
 
 async def _chat_gemini(client: httpx.AsyncClient, system: str, user: str, schema: dict) -> dict:
@@ -204,7 +213,7 @@ async def detect(client, model, text: str, cats: list[str], purpose_rule: str) -
         "Also classify the purpose of the whole message for a company laptop. " + purpose_rule + " "
         "Give a short topic (2-4 words, in English) and confidence 0..1 in your work/non-work judgement."
     )
-    out = await _chat(client, model, system, f"MESSAGE:\n{text}", DETECT_SCHEMA)
+    out = await _chat(client, model, system, f"MESSAGE:\n{text}", DETECT_SCHEMA, stage="detect")
     findings = []
     for f in out.get("findings", []):
         if f.get("category") in cats and f.get("span"):
@@ -246,7 +255,7 @@ async def verify(client, model, text: str, findings: list[dict], host: str, sour
         + "\n\n".join(blocks)
     )
     user = f"MESSAGE:\n{text}\n\nFINDINGS:\n{items}"
-    out = await _chat(client, model, system, user, VERIFY_SCHEMA)
+    out = await _chat(client, model, system, user, VERIFY_SCHEMA, stage="verify")
     by_id = {v.get("id"): v for v in out.get("verdicts", [])}
     for i, f in enumerate(findings):
         v = by_id.get(i)
