@@ -118,7 +118,7 @@ async def classify(t: TryIt):
 @app.get("/api/policies")
 def get_policies():
     pol = policies.load()
-    return {"raw": pol.raw, "yaml": policies.POLICY_PATH.read_text()}
+    return {"raw": pol.raw, "yaml": policies.POLICY_PATH.read_text(), "runtime": classifier.runtime_model(pol)}
 
 
 @app.put("/api/policies")

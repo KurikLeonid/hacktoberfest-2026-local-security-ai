@@ -17,8 +17,28 @@ import httpx
 
 from . import policies, store
 
+def _load_env():
+    """Read backend/.env (gitignored) without overriding real environment variables."""
+    path = policies.ROOT / "backend" / ".env"
+    if path.exists():
+        for line in path.read_text().splitlines():
+            if "=" in line and not line.lstrip().startswith("#"):
+                k, v = line.split("=", 1)
+                os.environ.setdefault(k.strip(), v.strip())
+
+
+_load_env()
 OLLAMA = os.environ.get("OLLAMA_HOST", "http://127.0.0.1:11434")
+# "ollama" (local Gemma, the product) or "gemini" (TEMPORARY cloud stand-in for development only)
+PROVIDER = os.environ.get("DLP_LLM_PROVIDER", "ollama")
+GEMINI_MODEL = os.environ.get("GEMINI_MODEL", "gemini-3.8-flash")
 MAX_CHARS = 4000
+
+
+def runtime_model(pol: "policies.Policies") -> dict:
+    if PROVIDER == "gemini":
+        return {"provider": "gemini", "model": GEMINI_MODEL, "local": False}
+    return {"provider": "ollama", "model": pol.llm, "local": True}
 
 CATEGORY_HELP = {
     "pii": "personal data of a real person: full names with contact info, emails, phone numbers, home addresses, passport/SSN/ID numbers, dates of birth",
@@ -75,6 +95,8 @@ VERIFY_SCHEMA = {
 
 
 async def _chat(client: httpx.AsyncClient, model: str, system: str, user: str, schema: dict) -> dict:
+    if PROVIDER == "gemini":
+        return await _chat_gemini(client, system, user, schema)
     r = await client.post(
         f"{OLLAMA}/api/chat",
         json={
@@ -92,6 +114,28 @@ async def _chat(client: httpx.AsyncClient, model: str, system: str, user: str, s
     try:
         return json.loads(r.json()["message"]["content"])
     except (KeyError, json.JSONDecodeError) as e:
+        raise ClassifierError(f"bad model output: {e}") from e
+
+
+async def _chat_gemini(client: httpx.AsyncClient, system: str, user: str, schema: dict) -> dict:
+    r = await client.post(
+        f"https://generativelanguage.googleapis.com/v1beta/models/{GEMINI_MODEL}:generateContent",
+        headers={"x-goog-api-key": os.environ.get("GEMINI_API_KEY", "")},
+        json={
+            "systemInstruction": {"parts": [{"text": system}]},
+            "contents": [{"role": "user", "parts": [{"text": user}]}],
+            "generationConfig": {
+                "temperature": 0,
+                "responseMimeType": "application/json",
+                "responseJsonSchema": schema,
+            },
+        },
+    )
+    if r.status_code != 200:
+        raise ClassifierError(f"gemini {r.status_code}: {r.text[:200]}")
+    try:
+        return json.loads(r.json()["candidates"][0]["content"]["parts"][0]["text"])
+    except (KeyError, IndexError, json.JSONDecodeError) as e:
         raise ClassifierError(f"bad model output: {e}") from e
 
 
@@ -130,7 +174,13 @@ async def verify(client, model, text: str, findings: list[dict], host: str) -> l
         f"that a user is about to send to {host}, which is NOT allowed to receive these categories. "
         "For each finding decide whether it is really sensitive, using the labelled examples to calibrate "
         "(examples labelled not_sensitive show look-alikes that are safe). Give confidence 0..1 that the "
-        "finding is truly sensitive data that must not leave the company.\n\n" + "\n\n".join(blocks)
+        "finding is truly sensitive data that must not leave the company. Calibrate:\n"
+        "- 0.9-1.0: unambiguous and directly harmful: real secrets/keys/passwords, card or account numbers, "
+        "government IDs, a real person's contact details together with their name.\n"
+        "- 0.5-0.85: probably sensitive but needs a human: company source code, internal documents, customer "
+        "names without identifiers, business logic. A person must judge context.\n"
+        "- below 0.5: placeholders, public/generic code, well-known facts, data that only looks sensitive.\n\n"
+        + "\n\n".join(blocks)
     )
     user = f"MESSAGE:\n{text}\n\nFINDINGS:\n{items}"
     out = await _chat(client, model, system, user, VERIFY_SCHEMA)
@@ -163,7 +213,7 @@ async def classify(text: str, host: str, pol: policies.Policies | None = None) -
     t0 = time.monotonic()
 
     async def run():
-        # trust_env=False: never route Ollama calls through the (system) proxy we are part of
+        # trust_env=False: never route model calls through the (system) proxy we are part of
         async with httpx.AsyncClient(timeout=pol.model_timeout_s, trust_env=False) as client:
             findings = await detect(client, pol.llm, text, pol.categories)
             allowed = pol.allowed_categories(host)
@@ -179,7 +229,7 @@ async def classify(text: str, host: str, pol: policies.Policies | None = None) -
     except asyncio.TimeoutError as e:
         raise ClassifierError(f"model timeout > {pol.model_timeout_s}s") from e
     except httpx.HTTPError as e:
-        raise ClassifierError(f"ollama unreachable: {e}") from e
+        raise ClassifierError(f"{PROVIDER} unreachable: {e}") from e
 
     _locate(text, findings)
     score = max((f["confidence"] for f in findings if not f["allowed"] and f.get("is_sensitive")), default=0.0)

@@ -81,7 +81,8 @@ export const api = {
       '/api/classify',
       json('POST', { text, host }),
     ),
-  policies: () => req<{ raw: PolicyRaw; yaml: string }>('/api/policies'),
+  policies: () =>
+    req<{ raw: PolicyRaw; yaml: string; runtime: { provider: string; model: string; local: boolean } }>('/api/policies'),
   savePolicies: (raw: PolicyRaw) => req<{ restart_proxy: boolean }>('/api/policies', json('PUT', raw)),
   savePoliciesYaml: (yaml: string) => req<{ restart_proxy: boolean }>('/api/policies/yaml', json('PUT', { yaml })),
   dataset: (offset = 0, category = '') =>

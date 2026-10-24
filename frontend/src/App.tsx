@@ -25,8 +25,16 @@ export default function App() {
   const [events, setEvents] = useState<DlpEvent[]>([])
   const [policy, setPolicy] = useState<PolicyRaw | null>(null)
   const [live, setLive] = useState(false)
+  const [runtime, setRuntime] = useState<{ provider: string; model: string; local: boolean } | null>(null)
 
-  const loadPolicy = useCallback(() => api.policies().then((p) => setPolicy(p.raw)), [])
+  const loadPolicy = useCallback(
+    () =>
+      api.policies().then((p) => {
+        setPolicy(p.raw)
+        setRuntime(p.runtime)
+      }),
+    [],
+  )
 
   useEffect(() => {
     const onHash = () => setTab(tabFromHash())
@@ -60,7 +68,13 @@ export default function App() {
           <div className="flex items-center gap-2">
             <span className="text-xl">🛡️</span>
             <span className="font-semibold">Local DLP Guard</span>
-            <span className="text-xs text-slate-500">Gemma 4 · {policy?.models.llm ?? '…'} · всё локально</span>
+            {runtime && !runtime.local ? (
+              <span className="rounded bg-rose-600 px-2 py-0.5 text-xs font-semibold text-white">
+                ⚠ облачная модель {runtime.model}: только для разработки
+              </span>
+            ) : (
+              <span className="text-xs text-slate-500">{runtime?.model ?? '…'} · Ollama · всё локально</span>
+            )}
           </div>
           <nav className="flex gap-1">
             {TABS.map(([k, label]) => (
